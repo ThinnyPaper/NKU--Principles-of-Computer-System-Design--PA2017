@@ -109,11 +109,8 @@ static int cmd_x(char *args) {
 		if(sscanf(expr, "0x%08x", &addr) == 1) {
 			while(n > 0) {
 				printf("0x%08x\t", addr);
-        //printf("0x%08x ", vaddr_read(addr, 16));
-        for (int i =0 ;i<16;i++){
-          printf("0x%08x ", vaddr_read(addr, i));
+        printf("0x%08x ", vaddr_read(addr, 4));
 
-        }
 				n --;
 				addr += 5;
 				printf("\n");
