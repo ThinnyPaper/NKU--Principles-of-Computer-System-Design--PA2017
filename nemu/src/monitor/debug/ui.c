@@ -76,7 +76,7 @@ static int cmd_info(char *args){
     printf("ebp: 0x%08x\n", cpu.ebp);
     printf("esi: 0x%08x\n", cpu.esi);
     printf("edi: 0x%08x\n", cpu.edi);
-    printf("eip: 0x%0x\n", cpu.eip);
+    printf("eip: 0x%8x\n", cpu.eip);
 
 	} else if (strcmp(arg, "w") == 0) {
 		//list_breakpoint();
