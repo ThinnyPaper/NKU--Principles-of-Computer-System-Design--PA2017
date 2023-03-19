@@ -38,6 +38,29 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+// PA1 function-----------------------------------------------------
+static int cmd_si(char *args){
+  if(args == NULL) {
+		cpu_exec(1);
+		return 0;
+	}
+	char * steps = strtok(NULL, " ");
+	if(steps == NULL) {
+		exec(1);
+	} 
+  else {
+		int n = 1;
+		if(sscanf(steps, "%d", &n) == 1 && n > 0) { 
+      cpu_exec(n); 
+    }
+    else { 
+      printf("Bad number: \e[0;31m%s\e[0m\n", steps); 
+    }
+	}
+	return 0;
+}
+//end of PA1 funcion------------------------------------------------
+
 static struct {
   char *name;
   char *description;
@@ -48,7 +71,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-
+  { "si", "Single setp execution", cmd_si}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
