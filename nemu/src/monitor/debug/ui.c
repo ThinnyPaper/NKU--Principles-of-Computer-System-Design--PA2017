@@ -90,25 +90,23 @@ static int cmd_info(char *args){
 
 static int cmd_x(char *args) {
 	int n;
-	char *exprs;
+	char *expr;
 	vaddr_t addr;
 	if(args == NULL) { 
 		printf("Command format: x N EXPR\n");
 		return 0;
 	}
 	if(sscanf(args, "%d", &n) == 1) {
-		exprs = strtok(NULL, " ");
-		exprs = strtok(NULL, " ");
-		printf("n = %d, expr = %s\n", n, exprs);
-		if(exprs == NULL) {
+		expr = strtok(NULL, " ");
+		expr = strtok(NULL, " ");
+		printf("n = %d, expr = %s\n", n, expr);
+		if(expr == NULL) {
 			printf("Command format: x N EXPR\n");
 			return 0;
 		}
     // TODO: Calculate expr
-    printf(expr);
-    printf("%d\n",sscanf(expr, "0x%x", &addr));
-    printf(addr);
-		if(sscanf(expr, "0x%8x", &addr) == 1) {
+
+		if(sscanf(expr, "0x%08x", &addr) == 1) {
 			while(n > 0) {
 				printf("0x%08x:", addr);
 				int i;
