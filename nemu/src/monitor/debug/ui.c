@@ -54,7 +54,7 @@ static int cmd_si(char *args){
       cpu_exec(n); 
     }
     else { 
-      printf("Bad number: \e[0;31m%s\e[0m\n", steps); 
+      printf("Bad number: \e[0;31m%s\n", steps); 
     }
 	}
 	return 0;
