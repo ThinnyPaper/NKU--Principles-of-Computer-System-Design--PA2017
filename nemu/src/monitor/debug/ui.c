@@ -68,15 +68,15 @@ static int cmd_info(char *args){
 	}
 	if(strcmp(arg, "r") == 0) {
 		//print reg info 
-    printf("eax\t0x%08x\n", cpu.eax);
-    printf("ecx\t0x%08x\n", cpu.ecx);
-    printf("edx\t0x%08x\n", cpu.edx);
-    printf("ebx\t0x%08x\n", cpu.ebx);
-    printf("esp\t0x%08x\n", cpu.esp);
-    printf("ebp\t0x%08x\n", cpu.ebp);
-    printf("esi\t0x%08x\n", cpu.esi);
-    printf("edi\t0x%08x\n", cpu.edi);
-    printf("eip\t0x%08x\n", cpu.eip);
+    printf("eax: 0x%8x\n", cpu.eax);
+    printf("ecx: 0x%08x\n", cpu.ecx);
+    printf("edx: 0x%08x\n", cpu.edx);
+    printf("ebx: 0x%08x\n", cpu.ebx);
+    printf("esp: 0x%08x\n", cpu.esp);
+    printf("ebp: 0x%08x\n", cpu.ebp);
+    printf("esi: 0x%08x\n", cpu.esi);
+    printf("edi: 0x%08x\n", cpu.edi);
+    printf("eip: 0x%08x\n", cpu.eip);
 
 	} else if (strcmp(arg, "w") == 0) {
 		//list_breakpoint();
