@@ -54,8 +54,25 @@ static int cmd_si(char *args){
       cpu_exec(n); 
     }
     else { 
-      printf("Bad number: \e[31m%s\e[0m\n", steps); 
+      printf("Bad Argument: \e[31m%s\e[0m\n", steps); 
     }
+	}
+	return 0;
+}
+
+static int cmd_info(char *args){
+	char *arg = strtok(NULL, " ");
+  printf(arg);
+	if(arg==NULL){
+		printf("undefined info args\n");
+		return 0;
+	}
+	if(strcmp(arg, "r") == 0) {
+		//print_reg();
+	} else if (strcmp(arg, "w") == 0) {
+		//list_breakpoint();
+	} else {
+		printf("Bad Argument: \e[31m%s\e[0m\n",arg);
 	}
 	return 0;
 }
@@ -69,6 +86,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+	{ "info", "r: Print register info; w: Print watch point info", cmd_info},
 
   /* TODO: Add more commands */
   { "si", "Single setp execution", cmd_si}
