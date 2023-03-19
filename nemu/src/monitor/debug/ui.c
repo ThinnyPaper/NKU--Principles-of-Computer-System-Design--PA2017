@@ -88,7 +88,7 @@ static int cmd_info(char *args){
 	return 0;
 }
 
-static int cmd_x(char *args) {/*
+static int cmd_x(char *args) {
 	int n;
 	char *exprs;
 	vaddr_t addr;
@@ -106,18 +106,14 @@ static int cmd_x(char *args) {/*
 		}
     // TODO: Calculate expr
 
-		if(!success) {
-			//change
-			//printf("invalid expression: %s\n", p);
-			printf("invalid expression: %s\n", exprs);
-		} else {
+		if(sscanf(expr, "0x%08x", &addr) == 1) {
 			while(n > 0) {
-				printf("0x%08x:\t", addr);
+				printf("0x%08x:", addr);
 				int i;
 				for(i = 0; i < 4; i ++) {
 					if(n == 0) { break; }
 					else {
-						printf("0x%08x ", vaddr_read(addr + 4 * i, SREG_DS, 4));
+						printf("0x%08x ", vaddr_read(addr + 4 * i, 4));
 						n --;
 					}
 				}
@@ -125,11 +121,16 @@ static int cmd_x(char *args) {/*
 				printf("\n");
 			}
 		}
-	} else {
+    else {
+      printf("Bad EXPR\n");
+      return 0;
+    }
+	} 
+  else {
 		printf("Command format: x N EXPR\n");
 		return 0;
 	}
-	return 0;*/
+	return 0;
 }
 //end of PA1 funcion------------------------------------------------
 
