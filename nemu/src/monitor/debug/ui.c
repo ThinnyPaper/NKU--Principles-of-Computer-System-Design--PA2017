@@ -62,13 +62,22 @@ static int cmd_si(char *args){
 
 static int cmd_info(char *args){
 	char *arg = strtok(NULL, " ");
-  printf(arg);
 	if(arg==NULL){
 		printf("undefined info args\n");
 		return 0;
 	}
 	if(strcmp(arg, "r") == 0) {
-		//print_reg();
+		//print reg info 
+    printf("eax\t0x%08x\n", cpu.eax);
+    printf("ecx\t0x%08x\n", cpu.ecx);
+    printf("edx\t0x%08x\n", cpu.edx);
+    printf("ebx\t0x%08x\n", cpu.ebx);
+    printf("esp\t0x%08x\n", cpu.esp);
+    printf("ebp\t0x%08x\n", cpu.ebp);
+    printf("esi\t0x%08x\n", cpu.esi);
+    printf("edi\t0x%08x\n", cpu.edi);
+    printf("eip\t0x%08x\n", cpu.eip);
+
 	} else if (strcmp(arg, "w") == 0) {
 		//list_breakpoint();
 	} else {
