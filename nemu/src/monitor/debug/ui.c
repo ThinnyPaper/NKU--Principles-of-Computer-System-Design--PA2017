@@ -68,7 +68,7 @@ static int cmd_info(char *args){
 	}
 	if(strcmp(arg, "r") == 0) {
 		//print reg info 
-    printf("eax: 0x%8x\n", cpu.eax);
+    printf("eax: 0x%08x\n", cpu.eax);
     printf("ecx: 0x%08x\n", cpu.ecx);
     printf("edx: 0x%08x\n", cpu.edx);
     printf("ebx: 0x%08x\n", cpu.ebx);
@@ -76,11 +76,13 @@ static int cmd_info(char *args){
     printf("ebp: 0x%08x\n", cpu.ebp);
     printf("esi: 0x%08x\n", cpu.esi);
     printf("edi: 0x%08x\n", cpu.edi);
-    printf("eip: 0x%8x\n", cpu.eip);
+    printf("eip: 0x%08x\n", cpu.eip);
 
-	} else if (strcmp(arg, "w") == 0) {
-		//list_breakpoint();
-	} else {
+	} 
+  else if (strcmp(arg, "w") == 0) {
+		// TODO: Print Breakpoint
+	} 
+  else {
 		printf("Bad Argument: \e[31m%s\e[0m\n",arg);
 	}
 	return 0;
