@@ -87,6 +87,50 @@ static int cmd_info(char *args){
 	}
 	return 0;
 }
+
+static int cmd_x(char *args) {/*
+	int n;
+	char *exprs;
+	vaddr_t addr;
+	if(args == NULL) { 
+		printf("Command format: x N EXPR\n");
+		return 0;
+	}
+	if(sscanf(args, "%d", &n) == 1) {
+		exprs = strtok(NULL, " ");
+		exprs = strtok(NULL, " ");
+		printf("n = %d, expr = %s\n", n, exprs);
+		if(exprs == NULL) {
+			printf("Command format: x N EXPR\n");
+			return 0;
+		}
+    // TODO: Calculate expr
+
+		if(!success) {
+			//change
+			//printf("invalid expression: %s\n", p);
+			printf("invalid expression: %s\n", exprs);
+		} else {
+			while(n > 0) {
+				printf("0x%08x:\t", addr);
+				int i;
+				for(i = 0; i < 4; i ++) {
+					if(n == 0) { break; }
+					else {
+						printf("0x%08x ", vaddr_read(addr + 4 * i, SREG_DS, 4));
+						n --;
+					}
+				}
+				addr += 16;
+				printf("\n");
+			}
+		}
+	} else {
+		printf("Command format: x N EXPR\n");
+		return 0;
+	}
+	return 0;*/
+}
 //end of PA1 funcion------------------------------------------------
 
 static struct {
@@ -97,10 +141,11 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-	{ "info", "r: Print register info; w: Print watch point info", cmd_info},
-
+	
   /* TODO: Add more commands */
-  { "si", "Single setp execution", cmd_si}
+  { "si", "Single setp execution", cmd_si},
+  { "info", "r: Print register info; w: Print watch point info", cmd_info},
+  { "x", "x N EXPR: Print memory from EXPR to EXPR+N.", cmd_x}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
