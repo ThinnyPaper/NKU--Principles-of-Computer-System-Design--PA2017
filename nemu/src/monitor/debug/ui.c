@@ -106,7 +106,7 @@ static int cmd_x(char *args) {
 		}
     // TODO: Calculate expr
 
-		if(sscanf(expr, "0x%08x", &addr) == 1) {
+		if(sscanf(expr, "0x%8x", &addr) == 1) {
 			while(n > 0) {
 				printf("0x%08x:", addr);
 				int i;
