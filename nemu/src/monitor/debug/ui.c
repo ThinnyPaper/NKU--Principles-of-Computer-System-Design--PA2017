@@ -140,7 +140,7 @@ static int cmd_p(char *args) {
   bool success = true;
   res=expr(expr_str, &success);
   if(success == true){
-    printf("result :%d\n", res);
+    printf("result: %d\n", res);
   }
   else{
     printf("Evaluate falled\n");
@@ -163,7 +163,7 @@ static struct {
   { "si", "Single setp execution", cmd_si},
   { "info", "r: Print register info; w: Print watch point info", cmd_info},
   { "x", "x N EXPR: Print memory from EXPR to EXPR+N.", cmd_x},
-  { "p", "evaluate a EXPR", cmd_p}
+  { "p", "Evaluate a EXPR", cmd_p}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))

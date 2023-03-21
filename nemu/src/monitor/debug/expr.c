@@ -256,7 +256,7 @@ int find_dominant(int p, int q){
       if(op_priority(tokens[i].type) <= op_priority(tokens[d].type)) d=i;
     }
   }
-  printf("d=%d\n",d);
+  //printf("d=%d\n",d);
   return d;
 }
 
@@ -266,7 +266,7 @@ int eval(int p, int q, bool* success) {
   if( success == false){
     return 0;
   }
-  printf("p=%d,q=%d\n",p,q);
+  //printf("p=%d,q=%d\n",p,q);
   if(p > q) {
     printf("Bad Expression!\n");
     success = false;
