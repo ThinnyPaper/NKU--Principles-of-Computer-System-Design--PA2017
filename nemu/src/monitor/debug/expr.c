@@ -186,11 +186,10 @@ uint32_t get_token_value(Token token) {
         else if(strcasecmp(reg, "eip") == 0) {
           return cpu.eip;
         }
-        else {
-          printf("Illegal reg!\n");
-          assert(0);
-        }
       }
+      printf("Illegal reg!\n");
+      assert(0);
+        
     }
     else {
       printf("Illegal value token!\n");
