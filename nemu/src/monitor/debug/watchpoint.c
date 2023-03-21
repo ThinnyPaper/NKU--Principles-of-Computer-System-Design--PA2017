@@ -55,7 +55,6 @@ void free_wp(int no){
       }
     }
   }
-    printf("in free\n");
 
   wp->next = free_;
   free_ = wp;
