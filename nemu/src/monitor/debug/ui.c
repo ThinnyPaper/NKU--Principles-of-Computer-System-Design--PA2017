@@ -82,6 +82,7 @@ static int cmd_info(char *args){
 	} 
   else if (strcmp(arg, "w") == 0) {
 		// TODO: Print Breakpoint
+    show_wp();
 	} 
   else {
 		printf("Bad Argument: \e[31m%s\e[0m\n",arg);

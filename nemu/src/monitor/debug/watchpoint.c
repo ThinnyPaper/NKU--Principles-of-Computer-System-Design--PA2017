@@ -56,3 +56,11 @@ void free_wp(int no){
   free_ = wp;
 }
 
+
+
+
+void show_wp(){
+  for(WP* i = head;i != NULL; i = i->next) {
+    printf("Watchpoint %d : %s\n", i->NO, i->expr);
+  }
+}
