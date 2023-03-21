@@ -210,6 +210,7 @@ int eval(int p, int q, bool* success) {
   if( success == false){
     return 0;
   }
+  printf("p=%d,q=%d\n",p,q);
   if(p > q) {
     printf("Bad Expression!\n");
     success = false;
