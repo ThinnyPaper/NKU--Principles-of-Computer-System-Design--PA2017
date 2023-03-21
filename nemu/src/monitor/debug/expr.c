@@ -153,39 +153,7 @@ bool check_parentheses(int p,int q){
   return true;
 }
 
-int get_operator_priority(int type) {
-  switch(type){
-    case TK_NOTYPE:
-    case ')':
-      return 0;
-    case TK_OR:
-      return 1;
-    case TK_AND:
-      return 2;
-    case TK_EQ:
-    case TK_NEQ:
-      return 3;
-    case '<':
-    case '>':
-    case TK_LEQ:
-    case TK_GEQ:
-      return 4;
-    case TK_LS:
-    case TK_RS:
-      return 5;
-    case '+':
-    case '-':
-      return 6;
-    case '*':
-    case '/':
-      return 7;
-    case TK_NEG:
-    case TK_DEREF:
-      return 8;
-    case '(':
-      return 9;
-  }
-}
+
 
 bool is_number_token(int type) {
   if(type == TK_DEC || type == TK_HEX || type == TK_REG) {
