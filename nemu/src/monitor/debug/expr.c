@@ -237,10 +237,8 @@ bool is_number_token(int type) {
 }
 
 int find_dominant(int p, int q){
-  int p1=p, q1=q;
-  while(tokens[p1].type!='(' && p1<q1) p1++;
-  while(tokens[q1].type!=')' && p1<q1) q1++;
   int d=p;
+  while(is_number_token(tokens[d].type)) d++;
   
   for(int i=p; p<=q; p++){
     if(is_number_token(tokens[i].type)) continue;
