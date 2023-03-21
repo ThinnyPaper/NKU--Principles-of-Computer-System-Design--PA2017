@@ -170,11 +170,8 @@ uint32_t get_token_value(Token token) {
     else if(token.type == TK_REG) {
       char reg[4] = {0};
       sscanf(token.str, "$%s", reg);
-      printf("reg:%s\n",reg);
       for(int i = 0; i < 8; i++) {
-        printf("reg=%s, regsl[i]=%s\n",reg,regsl[i]);
         if(strcasecmp(reg, regsl[i]) == 0) {
-          printf("in\n");
           return cpu.gpr[i]._32;
         }
         else if(strcasecmp(reg, regsw[i]) == 0) {
@@ -188,8 +185,7 @@ uint32_t get_token_value(Token token) {
         }
       }
       printf("Illegal reg!\n");
-      assert(0);
-        
+      assert(0);      
     }
     else {
       printf("Illegal value token!\n");
