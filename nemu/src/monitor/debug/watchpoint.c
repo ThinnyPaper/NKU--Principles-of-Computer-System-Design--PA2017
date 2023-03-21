@@ -68,3 +68,22 @@ void show_wp(){
     printf("Watchpoint %d : %s\n", i->NO, i->expr);
   }
 }
+
+bool check_wp(){
+  bool ret = false;
+  for(WP* i = head; i != NULL; i = i->next){
+    bool success = true;
+    uint32_t ans = expr(i->expr, &success);
+    if(success){
+      if(ans != i->value){
+        printf("Watchpoint NO: %d\texpr: %s\t0x%08d->0x%08d\n", i->NO, i->expr, i->value, ans);
+        i->value = ans;
+        ret = true;
+      }
+    }
+    else{
+      assert(0);  //should not reach here
+    }
+  }
+  return ret;
+}
