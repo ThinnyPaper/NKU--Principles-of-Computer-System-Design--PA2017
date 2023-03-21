@@ -130,12 +130,22 @@ static int cmd_x(char *args) {
 
 // section2
 static int cmd_p(char *args) {
-  char *expr = strtok(args, " ");
-  printf("expr = %s\n", expr);
-		if(expr == NULL) {
-			printf("Command format: x N EXPR\n");
+  char *expr_str = strtok(args, " ");
+  printf("expr = $%s$\n", expr_str);
+		if(expr_str == NULL) {
+			printf("NULL EXPR\n");
 			return 0;
 		}
+  uint32_t res = 0;
+  bool success = true;
+  res=expr(expr_str, &success);
+  if(success == true){
+    printf("result :%d\n", res);
+  }
+  else{
+    printf("Evaluate falled\n");
+  }
+
   return 0;
 }
 //end of PA1 funcion------------------------------------------------
