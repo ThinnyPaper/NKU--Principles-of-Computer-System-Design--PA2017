@@ -171,6 +171,7 @@ static int cmd_d(char* args) {
   char* arg = strtok(NULL, "\n");
   int no = atoi(arg);
   free_wp(no);
+  return 0;
 }
 //end of PA1 funcion------------------------------------------------
 
