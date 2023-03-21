@@ -258,6 +258,7 @@ int find_dominant(int p, int q){
       if(op_priority(tokens[i].type) <= op_priority(tokens[d].type)) d=i;
     }
   }
+  printf("d=%d\n",d);
   return d;
 }
 
