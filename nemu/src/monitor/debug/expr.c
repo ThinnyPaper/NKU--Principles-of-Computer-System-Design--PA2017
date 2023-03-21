@@ -170,6 +170,7 @@ uint32_t get_token_value(Token token) {
     else if(token.type == TK_REG) {
       char reg[4] = {0};
       sscanf(token.str, "$%s", reg);
+      printf("reg:%s\n",reg);
       for(int i = 0; i < 8; i++) {
         if(strcasecmp(reg, regsl[i]) == 0) {
           return cpu.gpr[i]._32;
