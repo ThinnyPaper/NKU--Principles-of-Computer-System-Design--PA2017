@@ -155,12 +155,7 @@ bool check_parentheses(int p,int q){
 
 
 
-bool is_number_token(int type) {
-  if(type == TK_DEC || type == TK_HEX || type == TK_REG) {
-    return true;
-  }
-  return false;
-}
+
 
 uint32_t get_token_value(Token token) {
   uint32_t ret_value = 0;
@@ -200,8 +195,70 @@ uint32_t get_token_value(Token token) {
     }
 }
 
-int find_dominant(){
-  return 0;
+int op_priority(int type) {
+  switch(type){
+    case TK_NOTYPE:
+    case ')':
+      return 0;
+    case TK_OR:
+      return 1;
+    case TK_AND:
+      return 2;
+    case TK_EQ:
+    case TK_NEQ:
+      return 3;
+    case '<':
+    case '>':
+    case TK_LEQ:
+    case TK_GEQ:
+      return 4;
+    case TK_LS:
+    case TK_RS:
+      return 5;
+    case '+':
+    case '-':
+      return 6;
+    case '*':
+    case '/':
+      return 7;
+    case TK_NEG:
+    case TK_DEREF:
+      return 8;
+    case '(':
+      return 9;
+  }
+}
+
+bool is_number_token(int type) {
+  if(type == TK_DEC || type == TK_HEX || type == TK_REG) {
+    return true;
+  }
+  return false;
+}
+
+int find_dominant(int p, int q){
+  int p1=p, q1=q;
+  while(tokens[p1].type!='(' && p1<q1) p1++;
+  while(tokens[q1].type!=')' && p1<q1) q1++;
+  int d=p;
+  
+  for(int i=p; p<=q; p++){
+    if(is_number_token(tokens[i].type)) continue;
+    else if(tokens[i].type == '('){
+      int cnt=1;
+      while(cnt!=0){
+        p++;
+        if(tokens[i].type=='(') cnt++;
+        else if(tokens[i].type==')') cnt--;
+        if(cnt<0){printf("( and ) unmatched!\n"); assert(0);}
+      }
+    }
+    else if(tokens[i].type ==')') p++;
+    else{
+      if(op_priority(tokens[i].type) <= op_priority(tokens[d].type)) d=i;
+    }
+  }
+  return d;
 }
 
 
@@ -226,7 +283,7 @@ int eval(int p, int q, bool* success) {
   }
   else {
     //find dominant
-    int op = find_dominant();
+    int op = find_dominant(p,q);
     int val1, val2;
     if(tokens[op].type==TK_NEG || tokens[op].type==TK_DEREF){
       val2 = tokens[op].type==TK_NEG ? -eval(op+1, q, success) : vaddr_read(eval(op+1, q, success), 4);
