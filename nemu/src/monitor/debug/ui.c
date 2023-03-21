@@ -191,6 +191,7 @@ static struct {
   { "p", "Caculate a EXPR", cmd_p},
   { "w", "Set watchpoint", cmd_w},
   { "d", "Delete watchpoint", cmd_d}
+  //PA1 finished
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
