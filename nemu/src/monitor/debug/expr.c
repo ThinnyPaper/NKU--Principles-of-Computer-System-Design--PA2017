@@ -231,6 +231,10 @@ uint32_t get_token_value(Token token) {
     }
 }
 
+int find_dominant(){
+  return 0;
+}
+
 
 
 int eval(int p, int q, bool* success) {
