@@ -130,7 +130,7 @@ static int cmd_x(char *args) {
 
 // section2
 static int cmd_p(char *args) {
-  char *expr_str = strtok(args, " ");
+  char *expr_str = strtok(NULL, "\n");
   printf("expr = $%s$\n", expr_str);
 		if(expr_str == NULL) {
 			printf("NULL EXPR\n");
@@ -139,7 +139,7 @@ static int cmd_p(char *args) {
   uint32_t res = 0;
   bool success = true;
   res=expr(expr_str, &success);
-  if(success == true){
+  if(success){
     printf("result=%d\n", res);
   }
   else{
@@ -147,6 +147,29 @@ static int cmd_p(char *args) {
   }
 
   return 0;
+}
+
+// section3
+static int cmd_w(char* args) {
+  WP* wp = new_wp();
+  char* arg = strtok(NULL, "\n");
+  strcpy(wp->expr, arg);
+  bool success = true;
+  wp->value = expr(arg, &success);
+  if(success){
+    printf("watchpoint %d : %s\n", wp->NO, wp->expr);
+  }
+  else{
+    printf("Illegal Expression!\n");
+    free_wp(wp->NO);
+  }
+  return 0;
+}
+
+static int cmd_d(char* args) {
+  char* arg = strtok(NULL, "\n");
+  int no = atoi(arg);
+  free_wp(no);
 }
 //end of PA1 funcion------------------------------------------------
 
@@ -161,9 +184,11 @@ static struct {
 	
   /* TODO: Add more commands */
   { "si", "Single setp execution", cmd_si},
-  { "info", "r: Print register info; w: Print watch point info", cmd_info},
+  { "info", "r: Print register info; w: Print watchpoint info", cmd_info},
   { "x", "x N EXPR: Print memory from EXPR to EXPR+N.", cmd_x},
-  { "p", "Caculate a EXPR", cmd_p}
+  { "p", "Caculate a EXPR", cmd_p},
+  { "w", "Set watchpoint", cmd_w},
+  { "d", "Delete watchpoint", cmd_d}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
