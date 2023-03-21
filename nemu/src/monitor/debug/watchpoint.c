@@ -34,6 +34,7 @@ WP* new_wp(){
 }
 
 void free_wp(int no){
+  printf("in free\n");
   WP* wp = NULL;
   for(WP* i = head; i != NULL; i = i->next) {
     if(i->NO == no) {
