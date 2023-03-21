@@ -132,7 +132,7 @@ static int cmd_x(char *args) {
 // section2
 static int cmd_p(char *args) {
   char *expr_str = strtok(NULL, "\n");
-  printf("expr = $%s$\n", expr_str);
+  printf("expr = %s\n", expr_str);
 		if(expr_str == NULL) {
 			printf("NULL EXPR\n");
 			return 0;
