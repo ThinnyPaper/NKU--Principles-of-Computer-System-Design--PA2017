@@ -244,6 +244,7 @@ int eval(int p, int q, bool* success) {
   if(p > q) {
     printf("Bad Expression!\n");
     success = false;
+    assert(0);
     return 0;
   }
   // only one token
