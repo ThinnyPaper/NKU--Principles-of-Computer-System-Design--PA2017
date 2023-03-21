@@ -39,6 +39,7 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 
 // PA1 function-----------------------------------------------------
+// section2
 static int cmd_si(char *args){
   if(args == NULL) {
 		cpu_exec(1);
@@ -126,7 +127,17 @@ static int cmd_x(char *args) {
 	}
 	return 0;
 }
-// section1
+
+// section2
+static int cmd_p(char *args) {
+  char *expr = strtok(args, " ");
+  printf("expr = %s\n", expr);
+		if(expr == NULL) {
+			printf("Command format: x N EXPR\n");
+			return 0;
+		}
+  return 0;
+}
 //end of PA1 funcion------------------------------------------------
 
 static struct {
@@ -141,7 +152,8 @@ static struct {
   /* TODO: Add more commands */
   { "si", "Single setp execution", cmd_si},
   { "info", "r: Print register info; w: Print watch point info", cmd_info},
-  { "x", "x N EXPR: Print memory from EXPR to EXPR+N.", cmd_x}
+  { "x", "x N EXPR: Print memory from EXPR to EXPR+N.", cmd_x},
+  { "p", "evaluate a EXPR", cmd_p}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))

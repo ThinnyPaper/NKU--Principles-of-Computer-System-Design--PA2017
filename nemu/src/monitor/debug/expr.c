@@ -123,6 +123,10 @@ static bool make_token(char *e) {
 }
 
 bool check_parentheses(int p,int q){
+  // True: 括号包围的子式，且matched
+  // False: 非括号包围的式
+  // assert(0): unmatched
+
   int cnt = 0;
   for(int i = p;i < q; i++){
     if(tokens[i].type == '('){
@@ -136,7 +140,9 @@ bool check_parentheses(int p,int q){
         printf("( and ) unmatched!\n");
         assert(0);
       }
-      else return false;  //not in the (<expr>) format
+      else{ 
+        return false;
+      }  //not in the (<expr>) format
     }
   }
   if(cnt != 1 || tokens[q].type!=')'){
@@ -187,14 +193,14 @@ bool is_number_token(int type) {
   return false;
 }
 
-int get_token_value(Token token) {
-  int ret_value = 0;
+uint32_t get_token_value(Token token) {
+  uint32_t ret_value = 0;
     if(token.type == TK_DEC) {
       sscanf(token.str, "%d", &ret_value);
       return ret_value;
     }
     else if(token.type == TK_HEX) {
-      sscanf(token.str, "%x", &ret_value);
+      sscanf(token.str, "0x%08x", &ret_value);
       return ret_value;
     }
     else if(token.type == TK_REG) {
@@ -228,84 +234,57 @@ int get_token_value(Token token) {
 
 
 int eval(int p, int q, bool* success) {
+  if( success == false){
+    return 0;
+  }
   if(p > q) {
     printf("Bad Expression!\n");
     success = false;
     return 0;
   }
   // only one token
-  if(p == q) {
-    return get_token_value(tokens[p]);
+  else if(p == q) {
+    return (int)get_token_value(tokens[p]);
   }
-  // else if(check_parentheses(p, q) == true){
-  //   return eval(p + 1, q - 1);
-  // }
+  else if(check_parentheses(p, q) == true){
+    return eval(p + 1, q - 1, success);
+  }
   else {
-    tokens[++q].type = TK_NOTYPE;
-    // operand stack and operator stack
-    int operands_stack[32];
-    Token operators_stack[32];
-    int operands_index = -1, operators_index = 0;
-    operators_stack[0].type = TK_NOTYPE;
-    for(int i = p; i <= q; i++) {
-      // if token is number push into operand stack
-      if(is_number_token(tokens[i].type)) {
-        operands_stack[++operands_index] = get_token_value(tokens[i]);
+    //find dominant
+    int op = find_dominant();
+    int val1, val2;
+    if(tokens[op].type==TK_NEG || tokens[op].type==TK_DEREF){
+      val2 = tokens[op].type==TK_NEG ? -eval(op+1, q, success) : vaddr_read(eval(op+1, q, success), 4);
+      if(op==p){
+        return val2;
       }
-      // if token is operator
-      else {
-        // check priority of the top of stack
-        // if current operator's priority is greater than the top of stack
-        // push the token into operator stack
-        if(get_operator_priority(tokens[i].type) > get_operator_priority(operators_stack[operators_index].type)) {
-          if(tokens[i].type =='(') {
-            operators_stack[++operators_index].type = ')';
-          }
-          else {
-            operators_stack[++operators_index] = tokens[i];
-          }
-        }
-        // else calculate the tmp result
-        else {
-          while(operators_stack[operators_index].type != TK_NOTYPE &&
-                get_operator_priority(tokens[i].type) <= get_operator_priority(operators_stack[operators_index].type)) {
-            if(operators_stack[operators_index].type == ')') {
-              operators_index--;
-              break;
-            }
-            else {
-              switch(operators_stack[operators_index--].type) {
-                case '+': operands_stack[operands_index - 1] = operands_stack[operands_index] + operands_stack[operands_index - 1];operands_index--;break;
-                case '-': operands_stack[operands_index - 1] = operands_stack[operands_index] - operands_stack[operands_index - 1];operands_index--;break;
-                case '*': operands_stack[operands_index - 1] = operands_stack[operands_index] * operands_stack[operands_index - 1];operands_index--;break;
-                case '/': operands_stack[operands_index - 1] = operands_stack[operands_index] / operands_stack[operands_index - 1];operands_index--;break;
-                case '<': operands_stack[operands_index - 1] = operands_stack[operands_index] < operands_stack[operands_index - 1];operands_index--;break;
-                case '>': operands_stack[operands_index - 1] = operands_stack[operands_index] > operands_stack[operands_index - 1];operands_index--;break;
-                case TK_EQ: operands_stack[operands_index - 1] = operands_stack[operands_index] == operands_stack[operands_index - 1];operands_index--;break;
-                case TK_NEQ: operands_stack[operands_index - 1] = operands_stack[operands_index] != operands_stack[operands_index - 1];operands_index--;break;
-                case TK_AND: operands_stack[operands_index - 1] = operands_stack[operands_index] && operands_stack[operands_index - 1];operands_index--;break;
-                case TK_OR: operands_stack[operands_index - 1] = operands_stack[operands_index] || operands_stack[operands_index - 1];operands_index--;break;
-                case TK_LS: operands_stack[operands_index - 1] = operands_stack[operands_index] << operands_stack[operands_index - 1];operands_index--;break;
-                case TK_RS: operands_stack[operands_index - 1] = operands_stack[operands_index] >> operands_stack[operands_index - 1];operands_index--;break;
-                case TK_LEQ: operands_stack[operands_index - 1] = operands_stack[operands_index] <= operands_stack[operands_index - 1];operands_index--;break;
-                case TK_GEQ: operands_stack[operands_index - 1] = operands_stack[operands_index] >= operands_stack[operands_index - 1];operands_index--;break;
-                case TK_NEG: operands_stack[operands_index] = -operands_stack[operands_index];break;
-                case TK_DEREF: operands_stack[operands_index] = paddr_read(operands_stack[operands_index], 4);break;
-                default:success = false;return 0;
-              }
-            }
-          }
-          if(tokens[i].type != ')' && tokens[i].type != TK_NOTYPE) {
-            operators_stack[++operators_index] = tokens[i];
-          }
-        }
+      else{
+        op--;
+        val1 = eval(p, op-1, success);
       }
     }
-    if(operators_index != 0) {
-      *success = false;
-      return 0;
+    else{
+      val1 = eval(p, op-1, success);
+      val2 = eval(op+1, q, success);
     }
-    return operands_stack[0];
+
+    switch(tokens[op].type) {
+      case '+': return(val1 + val2); break;
+      case '-': return(val1 - val2); break;
+      case '*': return(val1 * val2); break;
+      case '/': return(val1 / val2); break;
+      case '<': return(val1 < val2); break;
+      case '>': return(val1 > val2); break;
+      case TK_EQ: return(val1 == val2); break;
+      case TK_NEQ: return(val1 != val2); break;
+      case TK_AND: return(val1 && val2); break;
+      case TK_OR: return(val1 || val2); break;
+      case TK_LS: return(val1 << val2); break;
+      case TK_RS: return(val1 >> val2); break;
+      case TK_LEQ: return(val1 <= val2); break;
+      case TK_GEQ: return(val1 >= val2); break;
+      default: success = false; return 0;
+    }
   }
 }
 
