@@ -149,7 +149,20 @@ void difftest_step(uint32_t eip) {
 
   // TODO: Check the registers state with QEMU.
   // Set `diff` as `true` if they are not the same.
-  TODO();
+  if(r.eax!=cpu.eax||r.ebx!=cpu.ebx||r.ecx!=cpu.ecx||r.edx!=cpu.edx||r.esp!=cpu.esp||r.ebp!=cpu.ebp||r.esi!=cpu.esi||r.edi!=cpu.edi/*||(r.eflags&(0xac0))!=(cpu.eflags&(0xac0))*/){
+    printf("Something Wrong At eip:0x%08X\n",eip);
+    printf("eax: 0x%08X  true: 0x%08X\n",cpu.eax,r.eax);	
+    printf("ebx: 0x%08X  true: 0x%08X\n",cpu.ebx,r.ebx);	
+    printf("ecx: 0x%08X  true: 0x%08X\n",cpu.ecx,r.ecx);	
+    printf("edx: 0x%08X  true: 0x%08X\n",cpu.edx,r.edx);	
+    printf("esp: 0x%08X  true: 0x%08X\n",cpu.esp,r.esp);	
+    printf("ebp: 0x%08X  true: 0x%08X\n",cpu.ebp,r.ebp);	
+    printf("esi: 0x%08X  true: 0x%08X\n",cpu.esi,r.esi);	
+    printf("edi: 0x%08X  true: 0x%08X\n",cpu.edi,r.edi);	
+
+    printf("eflags: 0x%08X  true: 0x%08X\n",cpu.EFLAGS.all_flags&0xac0,r.eflags&0xac0);	
+    diff=true;
+  }
 
   if (diff) {
     nemu_state = NEMU_END;
