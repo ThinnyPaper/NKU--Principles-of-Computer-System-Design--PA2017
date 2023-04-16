@@ -13,6 +13,7 @@ make_EHelper(sbb);
 make_EHelper(xor);
 
 //Control
+make_EHelper(jmp);
 make_EHelper(call);
 make_EHelper(call_rm);
 make_EHelper(ret);
