@@ -13,8 +13,13 @@ make_EHelper(and) {
 }
 
 make_EHelper(xor) {
-  TODO();
-
+  rtl_xor(&t2,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&t2);
+  //update ZF,SF,(and PF,but PA2 seems to ignore this flag.
+  rtl_update_ZFSF(&t2,id_dest->width);
+  //clear OF,CF
+  rtl_set_OF(&tzero);
+  rtl_set_CF(&tzero);
   print_asm_template2(xor);
 }
 

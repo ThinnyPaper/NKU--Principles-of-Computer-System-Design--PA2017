@@ -214,7 +214,7 @@ make_DHelper(SI_E2G) {
   if (id_dest->width == 2) {
     id_src->val &= 0xffff;
   }
-}
+} 
 
 make_DHelper(gp2_1_E) {
   decode_op_rm(eip, id_dest, true, NULL, false);
