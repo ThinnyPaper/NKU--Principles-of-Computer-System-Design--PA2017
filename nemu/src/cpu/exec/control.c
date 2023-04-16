@@ -22,7 +22,7 @@ make_EHelper(jmp_rm) {
 
   print_asm("jmp *%s", id_dest->str);
 }
-
+//call directly version
 make_EHelper(call) {
   // the target address is calculated at the decode stage
   rtl_push(&decoding.seq_eip);
@@ -35,7 +35,7 @@ make_EHelper(ret) {
   decoding.is_jmp=1;
   print_asm("ret");
 }
-
+//call indirectly version
 make_EHelper(call_rm) {
   rtl_push(&decoding.seq_eip);
   //call a location specified by a gpr and give it 32-bits value into EIP

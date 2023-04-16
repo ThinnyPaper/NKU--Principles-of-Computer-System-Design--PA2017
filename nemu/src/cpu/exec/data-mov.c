@@ -31,28 +31,54 @@ make_EHelper(popa) {
 }
 
 make_EHelper(leave) {
-  TODO();
-
+//it equals to mov+pop
+  rtl_mv(&cpu.esp, &cpu.ebp);
+  rtl_pop(&cpu.ebp);
+  //operand_write(id_dest,&cpu.ebp);
   print_asm("leave");
 }
 
 make_EHelper(cltd) {
+  //double the size of the source operand (EAX) through out EDX
+  //only operate data on EAX
   if (decoding.is_operand_size_16) {
-    TODO();
+    rtl_lr(&t2,R_AX,2);
+    if((int32_t)(int16_t)(t2)<0){//double the size of signal
+	rtl_addi(&t2,&tzero,0xffff);
+	rtl_sr(R_DX,2,&t2);
+    }else{
+	rtl_sr(R_DX,2,&tzero);
+    }
   }
-  else {
-    TODO();
+  else {//size_32
+    rtl_lr(&t2,R_EAX,4);
+    if((int32_t)t2<0){
+	rtl_addi(&t2,&tzero,0xffffffff);
+	rtl_sr(R_EDX,4,&t2);
+    }else{
+	rtl_sr(R_EDX,4,&tzero);
+    }
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
 }
 
 make_EHelper(cwtl) {
+  //AT&T. In Intel is names cwde
+  //double the size of EAX by using signal extension
+  //if operand_size is 16, extends AL to AX
+  //if operand_size is 32, extends AX to EAX
   if (decoding.is_operand_size_16) {
-    TODO();
+    rtl_lr(&t0,R_AL,1);
+    //we can't use sext cause it extends to 32bit.
+    t0 = (int16_t)(int8_t)t0;
+    rtl_sr(R_AX,2,&t0);
   }
   else {
-    TODO();
+    rtl_lr(&t0,R_AX,2);
+    //too lazy to use sext,put it outside.
+    t0 = (int32_t)(int16_t)t0;
+    rtl_sr(R_EAX,4,&t0);
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");

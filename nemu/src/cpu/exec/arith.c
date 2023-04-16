@@ -1,7 +1,20 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-  TODO();
+  rtl_add(&t2, &id_dest->val, &id_src->val);
+
+  rtl_sltu(&t0, &t2, &id_dest->val);
+  operand_write(id_dest, &t2);
+
+  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_set_CF(&t0);
+
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_not(&t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template2(add);
 }
@@ -26,25 +39,73 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  TODO();
 
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sltu(&t0, &id_dest->val, &t2);//if exists borrow bits
+
+  //it need update  OF,SF,ZF,AF,PF,CF but we only care about OF,SF,ZF,CF
+  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_set_CF(&t0);
+  //set OF. the same as sbb
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
   print_asm_template2(cmp);
 }
 
 make_EHelper(inc) {
-  TODO();
+  t0=1;
+  rtl_add(&t2,&id_dest->val,&t0);
+  operand_write(id_dest, &t2);
+  //inc doesn't influence CF. if you want, you need to use addi dest 1.
+  
+  //other part is just like add.
+  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_not(&t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
-  TODO();
+  t0=1;
+  rtl_sub(&t2, &id_dest->val, &t0);
+  operand_write(id_dest, &t2);
+
+  //dec doesn't influence CF. if you want, you need to use subi dest 1.
+
+  //other part is just like add.
+  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template1(dec);
 }
 
 make_EHelper(neg) {
-  TODO();
+  rtl_sub(&t2, &tzero, &id_dest->val);
+  operand_write(id_dest, &t2);
+  
+  //if id_dest->val !=0,it need to set CF
+  if(id_dest->val){
+	t0=1;
+	rtl_set_CF(&t0);
+  }
+  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template1(neg);
 }
