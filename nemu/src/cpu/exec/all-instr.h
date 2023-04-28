@@ -57,4 +57,6 @@ make_EHelper(nemu_trap);
 make_EHelper(in);
 make_EHelper(out);
 
+//PA3
 make_EHelper(lidt);
+make_EHelper(int);
