@@ -24,7 +24,7 @@
 ## Turing Machine
 
 * `void _putc(char ch);` 调试输出一个字符，输出到最容易观测的地方。对qemu输出到串口，对Linux native输出到本地控制台。
-* `void _halt(int code);` 终止运行并报告返回代码。`code`为0表示正常终止。
+* `void (int code);` 终止运行并报告返回代码。`code`为0表示正常终止。
 * `extern _Area _heap;` 一段可读、可写、可执行的内存，作为可分配的堆区。
 
 ## IO Extension
