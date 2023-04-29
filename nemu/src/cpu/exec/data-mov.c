@@ -46,7 +46,27 @@ make_EHelper(pusha) {
 }
 
 make_EHelper(popa) {
-  TODO();
+  if (decoding.is_operand_size_16) {
+  	rtl_pop((uint32_t*)&cpu.gpr[R_DI]._16);
+  	rtl_pop((uint32_t*)&cpu.gpr[R_SI]._16);
+ 	rtl_pop((uint32_t*)&cpu.gpr[R_BP]._16);
+  	rtl_pop((uint32_t*)&t0);
+ 	rtl_pop((uint32_t*)&cpu.gpr[R_BX]._16);
+  	rtl_pop((uint32_t*)&cpu.gpr[R_DX]._16);
+  	rtl_pop((uint32_t*)&cpu.gpr[R_CX]._16);
+  	rtl_pop((uint32_t*)&cpu.gpr[R_AX]._16);
+  }
+  else {
+ 	rtl_pop(&cpu.edi);
+  	rtl_pop(&cpu.esi);
+ 	rtl_pop(&cpu.ebp);
+  	rtl_pop(&t0);
+ 	rtl_pop(&cpu.ebx);
+  	rtl_pop(&cpu.edx);
+  	rtl_pop(&cpu.ecx);
+  	rtl_pop(&cpu.eax);
+       //needn't give to to esp.
+  }
 
   print_asm("popa");
 }
