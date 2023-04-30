@@ -31,7 +31,10 @@ int _write(int fd, void *buf, size_t count){
 
 void *_sbrk(intptr_t increment){
   intptr_t last=programBreak;
-
+  if(_syscall_(SYS_brk,programBreak+increment,0,0)==0){
+	programBreak+=increment;
+	return (void*)last;
+  }
   return (void *)-1;
 }
 
