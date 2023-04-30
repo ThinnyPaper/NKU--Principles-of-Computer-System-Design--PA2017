@@ -17,9 +17,12 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     case SYS_write:{
       Log("in write");
-      
+    
       break;
     }
+    case SYS_brk:
+	    ret_value=0;
+      break;
     
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
