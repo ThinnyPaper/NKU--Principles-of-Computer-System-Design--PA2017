@@ -34,7 +34,6 @@ _RegSet* do_syscall(_RegSet *r) {
       ret_value=fs_close(a[1]);
       break;
     case SYS_lseek:
-      Log("in the lseek\n");
       ret_value=fs_lseek(a[1],a[2],a[3]);
       break;
     case SYS_open:
