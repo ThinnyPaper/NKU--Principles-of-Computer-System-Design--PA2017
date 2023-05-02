@@ -10,7 +10,8 @@
 #ifndef __ISA_NATIVE__
 
 // FIXME: this is temporary
-
+uint8_t _end;
+intptr_t programBreak=(intptr_t)&_end;
 int _syscall_(int type, uintptr_t a0, uintptr_t a1, uintptr_t a2){
   int ret = -1;
   asm volatile("int $0x80": "=a"(ret): "a"(type), "b"(a0), "c"(a1), "d"(a2));
@@ -22,27 +23,32 @@ void _exit(int status) {
 }
 
 int _open(const char *path, int flags, mode_t mode) {
-  _exit(SYS_open);
+  return _syscall_(SYS_open,(uintptr_t)path,flags,mode);
 }
 
 int _write(int fd, void *buf, size_t count){
-  _exit(SYS_write);
+  return _syscall_(SYS_write, fd, (uintptr_t)buf, count);
 }
 
 void *_sbrk(intptr_t increment){
+  intptr_t last=programBreak;
+  if(_syscall_(SYS_brk,programBreak+increment,0,0)==0){
+	programBreak+=increment;
+	return (void*)last;
+  }
   return (void *)-1;
 }
 
 int _read(int fd, void *buf, size_t count) {
-  _exit(SYS_read);
+  return _syscall_(SYS_read,fd,(uintptr_t)buf,count);
 }
 
 int _close(int fd) {
-  _exit(SYS_close);
+  return _syscall_(SYS_close,fd,0,0);
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
-  _exit(SYS_lseek);
+  return _syscall_(SYS_lseek,fd,offset,whence);
 }
 
 // The code below is not used by Nanos-lite.
@@ -56,7 +62,7 @@ int _fstat(int fd, struct stat *buf) {
 int execve(const char *fname, char * const argv[], char *const envp[]) {
   assert(0);
   return -1;
-}
+} 
 
 int _execve(const char *fname, char * const argv[], char *const envp[]) {
   return execve(fname, argv, envp);

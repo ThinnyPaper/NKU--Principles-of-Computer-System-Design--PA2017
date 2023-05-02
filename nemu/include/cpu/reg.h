@@ -47,6 +47,15 @@ typedef struct {
   	};
   	uint32_t all_flags;
   }EFLAGS;
+
+  //PA3
+  //code segment register.
+  uint32_t CS;
+  //idtr register.it contains 16bit limit-add and 32bit base-add
+  struct{
+    uint16_t limit;
+    uint32_t base;
+  }IDTR;
 } CPU_state;
 
 extern CPU_state cpu;
