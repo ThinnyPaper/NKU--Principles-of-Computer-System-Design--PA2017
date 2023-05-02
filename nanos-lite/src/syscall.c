@@ -14,32 +14,32 @@ _RegSet* do_syscall(_RegSet *r) {
   a[3] = SYSCALL_ARG4(r);
   switch (a[0]) {
     case SYS_none:
-	ret_value=1;
-	break;
+      ret_value=1;
+      break;
     case SYS_exit:
-	_halt(a[1]);
-	break;
+      _halt(a[1]);
+      break;
     case SYS_write:
-	//Log("in the write\n");
-	ret_value=fs_write(a[1],(void*)a[2], a[3]);
-	break;
+      //Log("in the write\n");
+      ret_value=fs_write(a[1],(void*)a[2], a[3]);
+      break;
     case SYS_read:
-	//Log("in the read\n");
-	ret_value=fs_read(a[1],(void*)a[2],a[3]);
-	break;
+      //Log("in the read\n");
+      ret_value=fs_read(a[1],(void*)a[2],a[3]);
+      break;
     case SYS_brk:
-	ret_value=0;
-	break;
-    case SYS_close:
-	ret_value=fs_close(a[1]);
-	break;
+      ret_value=0;
+      break;
+        case SYS_close:
+      ret_value=fs_close(a[1]);
+      break;
     case SYS_lseek:
-	//Log("in the lseek\n");
-	ret_value=fs_lseek(a[1],a[2],a[3]);
-	break;
+      Log("in the lseek\n");
+      ret_value=fs_lseek(a[1],a[2],a[3]);
+      break;
     case SYS_open:
-	ret_value=fs_open((char*)a[1],a[2],a[3]);
-	break;
+      ret_value=fs_open((char*)a[1],a[2],a[3]);
+      break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
   SYSCALL_ARG1(r)=ret_value;
