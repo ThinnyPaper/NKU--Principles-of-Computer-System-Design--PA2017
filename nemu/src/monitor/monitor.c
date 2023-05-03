@@ -83,10 +83,14 @@ static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
 
-  //PA3---
+  //PA3----
   cpu.EFLAGS.all_flags=0x2;
   cpu.CS=8;
-  //PA3---
+  //PA3----
+
+  //PA4----
+  cpu.cr0=0x60000011;
+  //PA4----
 
 #ifdef DIFF_TEST
   init_qemu_reg();
