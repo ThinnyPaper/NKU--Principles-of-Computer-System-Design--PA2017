@@ -3,7 +3,7 @@
 
 #define PMEM_SIZE (128 * 1024 * 1024)
 
-#define PG_SIZE 4096
+#define PGSIZE 4096
 #define PRESENT 0x1
 #define ACCESSED 0x20
 #define DIRTY 0x40
@@ -92,10 +92,10 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-  if((addr&0x0FFF)+len>PG_SIZE){
+  if((addr&0x0FFF)+len>PGSIZE){
       //data cross the page boundary
       
-      int res=PG_SIZE-(addr&0x0FFF);
+      int res=PGSIZE-(addr&0x0FFF);
 
       paddr_t paddr=page_translate(addr,true);
       uint32_t low_data=paddr_read(paddr,res);
@@ -112,9 +112,9 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  if((addr&0x0FFF)+len>PG_SIZE){
+  if((addr&0x0FFF)+len>PGSIZE){
       //data cross the page boundary
-      int res=PG_SIZE-(addr&0x0FFF);
+      int res=PGSIZE-(addr&0x0FFF);
 
       paddr_t paddr= page_translate(addr,false);
       uint32_t low_data= data & ((1<<(res<<3))-1);
