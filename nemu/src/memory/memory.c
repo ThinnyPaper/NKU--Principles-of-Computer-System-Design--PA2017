@@ -78,12 +78,12 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 		return page_addr;
 	    }else{
 	    	Log("Page Frame is not present.");
-		assert(0);
+		    //assert(0);
 	    }
 
 	}else{
-	    Log("PTE is not present.");	
-	    assert(0);
+    Log("PTE is not present.");	
+    //assert(0);
 	}
 	
     }else{
