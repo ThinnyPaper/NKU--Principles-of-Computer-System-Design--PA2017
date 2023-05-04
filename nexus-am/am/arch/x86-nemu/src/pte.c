@@ -66,6 +66,17 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
+  PDE *pde=(PDE*)(p->ptr);
+  off_t pde_offset = PDX(va);
+  // if no page table, alloc one.
+  if(!(pde[pde_offset] & PTE_P)){
+    PTE* new_pte=(PTE*)(palloc_f());
+    pde[pde_offset]=( (uint32_t)(new_pte) | PTE_P);
+  }
+
+  PTE* pte_base_addr=(PTE*)(pde[pde_offset] & 0xFFFFF000);
+  off_t pte_offset = PTX(va);
+  pte_base_addr[pte_offset]=((uint32_t)pa | PTE_P);
 }
 
 void _unmap(_Protect *p, void *va) {
