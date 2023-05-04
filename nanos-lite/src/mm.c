@@ -23,8 +23,8 @@ int mm_brk(uint32_t new_brk) {
 	    //TODO:map memory region [current->max_brk,new_brk]
 	    //into address space current->as
 	    // it's similar with loader
-	    //int new_space = new_brk-PGROUNDUP(current->max_brk);
-      int new_space = new_brk-current->max_brk;
+	    int new_space = new_brk-PGROUNDUP(current->max_brk);
+      //int new_space = new_brk-current->max_brk;
 
       //cause max_brk may in the middle of page;
 	    void *cur_vaddr = (void*)PGROUNDUP(current->max_brk);
