@@ -1,13 +1,10 @@
 #include "nemu.h"
-
-
+#include "device/mmio.h"
 #define PMEM_SIZE (128 * 1024 * 1024)
-
 #define PG_SIZE 4096
 #define PRESENT 0x1
 #define ACCESSED 0x20
 #define DIRTY 0x40
-
 #define pmem_rw(addr, type) *(type *)({\
     Assert(addr < PMEM_SIZE, "physical address(0x%08x) is out of bound", addr); \
     guest_to_host(addr); \
@@ -29,7 +26,7 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
   int map_No=is_mmio(addr);
   if(map_No!=-1){
   	mmio_write(addr,len,data,map_No);
-	  return;
+	return;
   }
   memcpy(guest_to_host(addr), &data, len);
 }
@@ -78,12 +75,12 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 		return page_addr;
 	    }else{
 	    	Log("Page Frame is not present.");
-		    //assert(0);
+		assert(0);
 	    }
 
 	}else{
-    Log("PTE is not present.");	
-    //assert(0);
+	    Log("PTE is not present.");	
+	    assert(0);
 	}
 	
     }else{
