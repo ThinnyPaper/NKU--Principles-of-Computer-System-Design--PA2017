@@ -84,6 +84,7 @@ make_DHelper(I_G2E);
 make_DHelper(I);
 make_DHelper(r);
 make_DHelper(E);
+make_DHelper(A);//add for call Av
 make_DHelper(gp7_E);
 make_DHelper(test_I);
 make_DHelper(SI);

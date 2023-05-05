@@ -226,7 +226,7 @@ make_EHelper(real) {
 static inline void update_eip(void) {
   cpu.eip = (decoding.is_jmp ? (decoding.is_jmp = 0, decoding.jmp_eip) : decoding.seq_eip);
 }
-
+extern void raise_intr(uint8_t NO, vaddr_t ret_addr);
 void exec_wrapper(bool print_flag) {
 #ifdef DEBUG
   decoding.p = decoding.asm_buf;

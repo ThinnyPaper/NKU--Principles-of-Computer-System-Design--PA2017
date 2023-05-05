@@ -109,6 +109,12 @@ static inline make_DopHelper(O) {
 #endif
 }
 
+//Av
+make_DHelper(A){
+    decode_op_a(eip,id_dest,true);
+    decoding.jmp_eip=id_dest->simm;
+}
+
 /* Eb <- Gb
  * Ev <- Gv
  */
