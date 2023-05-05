@@ -66,17 +66,22 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
-  PDE *pde=(PDE*)(p->ptr);
-  off_t pde_offset = PDX(va);
-  // if no page table, alloc one.
-  if(!(pde[pde_offset] & PTE_P)){
-    PTE* new_pte=(PTE*)(palloc_f());
-    pde[pde_offset]=( (uint32_t)(new_pte) | PTE_P);
-  }
+  //p->ptr can get the base addr of PD
+  PDE* pgdir=(PDE*)p->ptr;
+  PTE* pgtab=NULL; 
 
-  PTE* pte_base_addr=(PTE*)(pde[pde_offset] & 0xFFFFF000);
-  off_t pte_offset = PTX(va);
-  pte_base_addr[pte_offset]=((uint32_t)pa | PTE_P);
+  PDE* pd=pgdir+PDX(va);
+  if(!(*pd & PTE_P))//not avaliable
+  {
+    //set a new pt
+    pgtab=(PTE*)(palloc_f());
+    *pd=(uintptr_t)pgtab|PTE_P;
+  }
+  pgtab=(PTE*)PTE_ADDR(*pd);//the base addr
+
+  PTE* pt=pgtab+PTX(va);
+  //set the value of pt index
+  *pt=(uintptr_t)pa|PTE_P;
 }
 
 void _unmap(_Protect *p, void *va) {
