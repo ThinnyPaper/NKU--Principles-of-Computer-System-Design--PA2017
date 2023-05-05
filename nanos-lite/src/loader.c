@@ -15,11 +15,11 @@ uintptr_t loader(_Protect *as, const char *filename) {
   int filesize=fs_filesz(fd);
   void* page_vaddr=DEFAULT_ENTRY, *page_paddr;
   while(filesize>0){
-    page_paddr=new_page();
-    _map(as,page_vaddr,page_paddr);	
-    fs_read(fd,page_paddr,PGSIZE);
-    page_vaddr+=PGSIZE;
-    filesize-=PGSIZE;
+        page_paddr=new_page();
+	_map(as,page_vaddr,page_paddr);	
+	fs_read(fd,page_paddr,PGSIZE);
+	page_vaddr+=PGSIZE;
+	filesize-=PGSIZE;
   }
   fs_close(fd);
   return (uintptr_t)DEFAULT_ENTRY;
