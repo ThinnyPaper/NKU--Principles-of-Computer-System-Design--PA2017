@@ -89,7 +89,7 @@ static inline void restart() {
   //PA3----
 
   //PA4----
-  cpu.cr0=0x60000011;
+  cpu.CR0=0x60000011;
   //PA4----
 
 #ifdef DIFF_TEST

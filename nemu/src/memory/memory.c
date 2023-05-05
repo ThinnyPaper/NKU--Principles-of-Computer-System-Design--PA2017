@@ -42,9 +42,9 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
     table: 21 bit - 12 bit
     each table item occupies 4 byte 
 */
-  if(cpu.PG){//open the pte mode
+  if(cpu.CR0&0x00000001){//open the pte mode
     //find page table entry.
-    paddr_t pde_base_addr = cpu.cr3;
+    paddr_t pde_base_addr = cpu.CR3;
     paddr_t pde_item_addr = pde_base_addr+((addr>>22)<<2);
     paddr_t pde_item = paddr_read(pde_item_addr,4);
     if(pde_item & PRESENT){
