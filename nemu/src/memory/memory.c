@@ -1,5 +1,7 @@
 #include "nemu.h"
 #include "device/mmio.h"
+#include "memory/mmu.h"
+
 #define PMEM_SIZE (128 * 1024 * 1024)
 #define PG_SIZE 4096
 #define PRESENT 0x1
@@ -30,8 +32,39 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
   }
   memcpy(guest_to_host(addr), &data, len);
 }
+paddr_t page_translate(vaddr_t addr,bool iswrite){
+  CR0 cr0=(CR0)cpu.cr0;
+  if (cr0.paging&&cr0.protect_enable)
+  {
+    /* code */
+    CR3 cr3=(CR3)cpu.cr3;
 
-paddr_t page_translate(vaddr_t addr, bool isRead){
+    //设置PDE
+    PDE* pgdirs=(PDE*)PTE_ADDR(cr3.val);
+    PDE pde=(PDE)paddr_read((uint32_t)(pgdirs+PDX(addr)),4);
+    Assert(pde.present,"addr=0x%x",addr);
+
+    //PTE
+    PTE* ptab=(PTE*)PTE_ADDR(pde.val);
+    PTE pte=(PTE)paddr_read((uint32_t)(ptab+PTX(addr)),4);
+    Assert(pte.present,"addr=0x%x",addr);
+
+    //accessed,dirty
+    pde.accessed=1;
+    pte.accessed=1;
+    if (iswrite)
+    {
+      pte.dirty=1;
+    }
+
+    //根据偏移量转化为物理地址
+    paddr_t paddr=PTE_ADDR(pte.val)| OFF(addr);
+    return paddr;
+  }
+  return addr;
+}
+
+paddr_t page_translateqcj(vaddr_t addr, bool isRead){
 /*
     present: 0 bit
     R/W: 1 bit
@@ -87,6 +120,9 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
     return addr;
   }
 }
+
+
+
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
   if((addr&0x0FFF)+len>PG_SIZE){
