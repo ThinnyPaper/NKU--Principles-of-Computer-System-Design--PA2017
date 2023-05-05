@@ -10,36 +10,18 @@ extern int fs_close(int fd);
 extern void* new_page(void);
 
 uintptr_t loader(_Protect *as, const char *filename) {
-  //TODO();
-  /* read `len' bytes starting from `offset' of ramdisk into `buf' */
-  //ramdisk_read(DEFAULT_ENTRY,(off_t*)0,RAMDISK_SIZE); 
+  //ramdisk_read(DEFAULT_ENTRY,0,get_ramdisk_size());
   int fd=fs_open(filename,0,0);
-  Log("filename: %s, fd: %d",filename,fd);
-
-  int size=fs_filesz(fd);
-  //get the num of pages
-  int pgnum=size/PGSIZE;
-  if(size%PGSIZE!=0)
-  {
-    pgnum++;
+  int filesize=fs_filesz(fd);
+  void* page_vaddr=DEFAULT_ENTRY, *page_paddr;
+  while(filesize>0){
+    page_paddr=new_page();
+    _map(as,page_vaddr,page_paddr);	
+    fs_read(fd,page_paddr,PGSIZE);
+    page_vaddr+=PGSIZE;
+    filesize-=PGSIZE;
   }
-
-  void*pa=NULL;
-  void*va=DEFAULT_ENTRY;
-
-  for(int i=0;i<pgnum;i++)
-  {
-    pa=new_page();
-    _map(as,va,pa);
-    fs_read(fd,pa,PGSIZE);
-    va+=PGSIZE;
-  }
-
-
-  //fs_read(fd,DEFAULT_ENTRY,size);
-
   fs_close(fd);
-
   return (uintptr_t)DEFAULT_ENTRY;
 }
 
