@@ -8,6 +8,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 
   //1.save state
   rtl_push(&cpu.EFLAGS.all_flags);
+  cpu.EFLAGS.IF=0;
   rtl_push(&cpu.CS);
   rtl_push(&ret_addr);//don't use cpu.eip. it's out of date.
 
@@ -27,4 +28,5 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
+  cpu.INTR = true;
 }
