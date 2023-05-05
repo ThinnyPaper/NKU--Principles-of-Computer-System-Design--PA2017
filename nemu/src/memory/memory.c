@@ -2,6 +2,12 @@
 #include "device/mmio.h"
 #include "memory/mmu.h"
 
+#define PTE_ADDR(pte)  ((uint32_t)(pte)&~0xfff)
+//解析va
+#define PDX(va) (((uint32_t)(va)>>22)&0x3ff)
+#define PTX(va) (((uint32_t)(va)>>12)&0x3ff)
+#define OFF(va) ((uint32_t)(va)&0xfff)
+
 #define PMEM_SIZE (128 * 1024 * 1024)
 #define PG_SIZE 4096
 #define PRESENT 0x1
