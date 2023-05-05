@@ -6,6 +6,8 @@ extern ssize_t fs_read(int fd, void *buf, size_t len);
 extern off_t fs_lseek(int fd, off_t offset, int whence);
 extern int fs_open(const char *pathname, int flags, int mode);
 extern int fs_close(int fd);
+extern int mm_brk(uint32_t new_brk);
+
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4],ret_value=0;
   a[0] = SYSCALL_ARG1(r);
@@ -28,7 +30,7 @@ _RegSet* do_syscall(_RegSet *r) {
       ret_value=fs_read(a[1],(void*)a[2],a[3]);
       break;
     case SYS_brk:
-      ret_value=0;
+      ret_value=mm_brk(a[1]);;
       break;
         case SYS_close:
       ret_value=fs_close(a[1]);
@@ -42,5 +44,5 @@ _RegSet* do_syscall(_RegSet *r) {
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
   SYSCALL_ARG1(r)=ret_value;
-  return NULL;
+  return r;
 }
