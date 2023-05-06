@@ -217,6 +217,7 @@ static make_EHelper(2byte_esc) {
 }
 
 make_EHelper(real) {
+  Log("here");
   uint32_t opcode = instr_fetch(eip, 1);//IF
   decoding.opcode = opcode;
   set_width(opcode_table[opcode].width);
@@ -234,8 +235,6 @@ void exec_wrapper(bool print_flag) {
 #endif
   //give the instruction and execute
   decoding.seq_eip = cpu.eip;
-Log("here");
-
   exec_real(&decoding.seq_eip);//make_EHelper(real)
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - cpu.eip;
