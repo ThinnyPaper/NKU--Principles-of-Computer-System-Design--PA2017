@@ -233,6 +233,7 @@ void exec_wrapper(bool print_flag) {
 #endif
   //give the instruction and execute
   decoding.seq_eip = cpu.eip;
+  Log("here");
   exec_real(&decoding.seq_eip);//make_EHelper(real)
 
 #ifdef DEBUG
