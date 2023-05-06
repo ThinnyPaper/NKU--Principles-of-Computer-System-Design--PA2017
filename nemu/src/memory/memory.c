@@ -89,7 +89,7 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-    Log("out,%d;len:",addr,len);
+    Log("out,%d;len:%d",addr,len);
 
   if((addr&0x0FFF)+len>PG_SIZE){
     Log("%d",addr);
