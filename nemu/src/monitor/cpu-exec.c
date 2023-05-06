@@ -22,6 +22,7 @@ void cpu_exec(uint64_t n) {
   nemu_state = NEMU_RUNNING;
 
   bool print_flag = n < MAX_INSTR_TO_PRINT;
+    Log("get debug");
 
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
@@ -31,7 +32,6 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
     // PA1
-    Log("get debug");
     if(check_wp()){
       nemu_state = NEMU_STOP;
     }
