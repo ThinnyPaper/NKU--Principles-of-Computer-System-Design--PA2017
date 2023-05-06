@@ -107,9 +107,12 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
       return data;
   }else{
    Log("else,%d;len:%d",addr,len);
-assert(0);
       paddr_t paddr=page_translate(addr,true);
       return paddr_read(paddr, len);
+        Log("paddr,%d",paddr);
+        
+assert(0);
+
   }
 }
 
