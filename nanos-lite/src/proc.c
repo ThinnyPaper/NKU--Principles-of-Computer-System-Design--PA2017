@@ -41,4 +41,5 @@ _RegSet* schedule(_RegSet *prev) {
   _switch(&current->as);
 
   //Log("0x%x  0x%x",current->tf,current->as);
-  return current->tf;}
+  return current->tf;
+  }
