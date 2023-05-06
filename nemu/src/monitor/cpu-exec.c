@@ -27,7 +27,6 @@ void cpu_exec(uint64_t n) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
      
-Log("here");
     exec_wrapper(print_flag);
 
 #ifdef DEBUG
