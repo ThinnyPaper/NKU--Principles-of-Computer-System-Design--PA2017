@@ -234,6 +234,8 @@ void exec_wrapper(bool print_flag) {
 #endif
   //give the instruction and execute
   decoding.seq_eip = cpu.eip;
+    Log("here");
+
   exec_real(&decoding.seq_eip);//make_EHelper(real)
 
 #ifdef DEBUG
@@ -249,7 +251,6 @@ void exec_wrapper(bool print_flag) {
 #ifdef DIFF_TEST
   uint32_t eip = cpu.eip;
 #endif
-  Log("here");
   //update eip for next.
   update_eip();
 
