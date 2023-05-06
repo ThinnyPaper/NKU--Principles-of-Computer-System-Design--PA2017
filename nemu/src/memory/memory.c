@@ -42,96 +42,91 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
     table: 21 bit - 12 bit
     each table item occupies 4 byte 
 */
-    if(cpu.PG){//open the pte mode
-	//find page table entry.
-	paddr_t pde_base_addr = cpu.cr3;
-	paddr_t pde_item_addr = pde_base_addr+((addr>>22)<<2);
-	paddr_t pde_item = paddr_read(pde_item_addr,4);
-	if(pde_item & PRESENT){
+  if(cpu.CR0 & PRESENT){//open the pte mode
+    //find page table entry.
+    paddr_t pde_base_addr = cpu.CR3;
+    paddr_t pde_item_addr = pde_base_addr+((addr>>22)<<2);
+    paddr_t pde_item = paddr_read(pde_item_addr,4);
+    if(pde_item & PRESENT){
 	    //find page frame entry
 	    paddr_t pte_base_addr = pde_item & 0xFFFFF000;//take 20bit
 	    paddr_t pte_item_addr = pte_base_addr + (((addr>>12)<<2) & 0x0FFF);
 	    paddr_t pte_item = paddr_read(pte_item_addr,4);
 
 	    if(pte_item & PRESENT){
-		//get page address
-		paddr_t page_base_addr = pte_item & 0xFFFFF000;
-		paddr_t page_addr = page_base_addr + (addr & 0x0FFF);
+        //get page address
+        paddr_t page_base_addr = pte_item & 0xFFFFF000;
+        paddr_t page_addr = page_base_addr + (addr & 0x0FFF);
 
-		//set accessed
-		pde_item |= ACCESSED;
-		pte_item |= ACCESSED;
+        //set accessed
+        pde_item |= ACCESSED;
+        pte_item |= ACCESSED;
 
-		//set dirty		
-		if(!isRead){
-		    pde_item |= DIRTY;
-		    pte_item |= DIRTY;		
-		}
-		
-		//update item
-		paddr_write(pde_item_addr,4,pde_item);
-		paddr_write(pte_item_addr,4,pte_item);
-		
-		return page_addr;
+        //set dirty		
+        if(!isRead){
+            pde_item |= DIRTY;
+            pte_item |= DIRTY;		
+        }
+        
+        //update item
+        paddr_write(pde_item_addr,4,pde_item);
+        paddr_write(pte_item_addr,4,pte_item);
+        
+		    return page_addr;
 	    }else{
 	    	Log("Page Frame is not present.");
-		assert(0);
+		    assert(0);
 	    }
 
-	}else{
-	    Log("PTE is not present.");	
-	    assert(0);
-	}
-	
-    }else{
-	return addr;
+	  }else{
+      Log("PTE is not present.");	
+      assert(0);
     }
+    
+  }else{
+    return addr;
+  }
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-    Log("out,%d;len:%d",addr,len);
+    Log("out,%d;len:",addr,len);
+
   if((addr&0x0FFF)+len>PG_SIZE){
-   Log("out,%d;len:%d",addr,len);
-//assert(0);
-      //data cross the page boundary
-      
-      int res=PG_SIZE-(addr&0x0FFF);
+    //data cross the page boundary
+        Log("out,%d;len:",addr,len);
 
-      paddr_t paddr=page_translate(addr,true);
-      uint32_t low_data=paddr_read(paddr,res);
 
-      paddr=page_translate(addr+res,true);
-      uint32_t high_data=paddr_read(paddr,len-res);
+    int res=PG_SIZE-(addr&0x0FFF);
+    paddr_t paddr=page_translate(addr,true);
+    uint32_t low_data=paddr_read(paddr,res);
 
-      uint32_t data=low_data + (high_data<<(res<<3));
-      return data;
+    paddr=page_translate(addr+res,true);
+    uint32_t high_data=paddr_read(paddr,len-res);
+
+    uint32_t data=low_data + (high_data<<(res<<3));
+    return data;
   }else{
-   Log("else,%d;len:%d",addr,len);
-      paddr_t paddr=page_translate(addr,true);
-          Log("paddr,%d",paddr);
-    assert(0);
-      return paddr_read(paddr, len);
-
-
+    paddr_t paddr=page_translate(addr,true);
+    return paddr_read(paddr, len);
   }
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   if((addr&0x0FFF)+len>PG_SIZE){
-      //data cross the page boundary
-      int res=PG_SIZE-(addr&0x0FFF);
+    //data cross the page boundary
+    int res=PG_SIZE-(addr&0x0FFF);
 
-      paddr_t paddr= page_translate(addr,false);
-      uint32_t low_data= data & ((1<<(res<<3))-1);
+    paddr_t paddr= page_translate(addr,false);
+    uint32_t low_data= data & ((1<<(res<<3))-1);
 
-      paddr_write(paddr,res,low_data);
-      paddr=page_translate(addr+res,false);
-      uint32_t high_data=data>>(res<<3);
+    paddr_write(paddr,res,low_data);
+    paddr=page_translate(addr+res,false);
+    uint32_t high_data=data>>(res<<3);
 
-      paddr_write(paddr,len-res,high_data);
+    paddr_write(paddr,len-res,high_data);
 
   }else{
-      paddr_t paddr=page_translate(addr,false);
-      paddr_write(paddr, len, data);
+    paddr_t paddr=page_translate(addr,false);
+    paddr_write(paddr, len, data);
   }
 }
