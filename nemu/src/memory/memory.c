@@ -92,7 +92,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
    // Log("out,%d;len:%d",addr,len);
 //assert(0);
   if((addr&0x0FFF)+len>PG_SIZE){
-    Log("%d",addr);
+   Log("out,%d;len:%d",addr,len);
 assert(0);
       //data cross the page boundary
       
