@@ -233,7 +233,6 @@ void exec_wrapper(bool print_flag) {
   decoding.p += sprintf(decoding.p, "%8x:   ", cpu.eip);
 #endif
   //give the instruction and execute
-  Log("debug");
   decoding.seq_eip = cpu.eip;
   exec_real(&decoding.seq_eip);//make_EHelper(real)
 
@@ -250,7 +249,7 @@ void exec_wrapper(bool print_flag) {
 #ifdef DIFF_TEST
   uint32_t eip = cpu.eip;
 #endif
-
+  Log("here");
   //update eip for next.
   update_eip();
 
