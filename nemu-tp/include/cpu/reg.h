@@ -15,25 +15,19 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  */
 
 typedef struct {
-  //general purpose register
-  /*we have 8-32bit to save register status.each 4 ptr use the same 32bit space.
-  So we use union that can be used by 4 ptr so that we can used different length
-  of register.
-  Then we union the gpr[8] and eight registers to stand for CPU_state. 
-  */
+
   union {
     union {
       uint32_t _32;
       uint16_t _16;
       uint8_t _8[2];
     } gpr[8];
-  
-  /* Do NOT change the order of the GPRs' definitions. */
-  
-  /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
-   * in PA2 able to directly access these registers.
-   */
-  //rtl=>register-transfer level
+    
+    /* Do NOT change the order of the GPRs' definitions. */
+
+    /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
+    * in PA2 able to directly access these registers.
+    */
     struct{
       rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
     };
@@ -54,27 +48,22 @@ typedef struct {
   	uint32_t all_flags;
   }EFLAGS;
 
+  //PA3
   //code segment register.
   uint32_t CS;
-  
   //idtr register.it contains 16bit limit-add and 32bit base-add
   struct{
-	uint16_t limit;
-	uint32_t base;
+    uint16_t limit;
+    uint32_t base;
   }IDTR;
 
-  //cr0 cr3
-  union{
-      struct{
-          uint32_t :31;
-	  uint32_t PG:1;
-      };
-      rtlreg_t cr0;
-  };
-  rtlreg_t cr3;
+ //cr0 cr3
+  rtlreg_t CR0;
+  rtlreg_t CR3;
 
-  //INTR
   bool INTR;
+
+
 } CPU_state;
 
 extern CPU_state cpu;

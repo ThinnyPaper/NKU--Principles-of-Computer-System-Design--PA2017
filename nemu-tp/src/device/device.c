@@ -77,7 +77,7 @@ void init_device() {
   init_serial();
   init_timer();
   init_vga();
-  init_i8042();//keyboard
+  init_i8042();
 
   struct sigaction s;
   memset(&s, 0, sizeof(s));
