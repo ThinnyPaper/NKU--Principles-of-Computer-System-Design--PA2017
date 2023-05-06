@@ -93,7 +93,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     //data cross the page boundary
     
     int res=PG_SIZE-(addr&0x0FFF);
-
+    Log("%d",addr);
     paddr_t paddr=page_translate(addr,true);
     uint32_t low_data=paddr_read(paddr,res);
 
