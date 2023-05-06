@@ -14,6 +14,7 @@ make_EHelper(push) {
 make_EHelper(pop) {
   //we can't use rtl_pop(&id_dest->val) directly
   rtl_pop(&t2);
+  
   operand_write(id_dest,&t2);
   print_asm_template1(pop);
 }
@@ -67,7 +68,6 @@ make_EHelper(popa) {
   	rtl_pop(&cpu.eax);
        //needn't give to to esp.
   }
-
   print_asm("popa");
 }
 

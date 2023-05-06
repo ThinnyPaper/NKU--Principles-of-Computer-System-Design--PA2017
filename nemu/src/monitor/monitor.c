@@ -82,16 +82,9 @@ static inline void load_img() {
 static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
-
-  //PA3----
   cpu.EFLAGS.all_flags=0x2;
   cpu.CS=8;
-  //PA3----
-
-  //PA4----
-  cpu.CR0=0x60000011;
-  //PA4----
-
+  cpu.cr0=0x60000011;
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif
@@ -137,10 +130,10 @@ int init_monitor(int argc, char *argv[]) {
   restart();
 
   /* Compile the regular expressions. */
-  init_regex();
+  init_regex();//PA1 statge 2
 
   /* Initialize the watchpoint pool. */
-  init_wp_pool();
+  init_wp_pool();//PA! stage 3
 
   /* Initialize devices. */
   init_device();
