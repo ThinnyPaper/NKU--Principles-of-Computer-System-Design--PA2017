@@ -3,21 +3,18 @@
 
 #include "common.h"
 
-#define MAX_LEN 128
-
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
-  char expr[MAX_LEN];
+  char* expr;
   uint32_t value;
-
+  bool isfree;
 } WP;
-
-WP* new_wp();
-void free_wp(int no);
-bool check_wp();
-void show_wp();
-
+WP* newwp(char * args,uint32_t value);
+bool free_wp(int n);
+void print_wp();
+WP* get_head();
+WP* get_free();
 #endif
