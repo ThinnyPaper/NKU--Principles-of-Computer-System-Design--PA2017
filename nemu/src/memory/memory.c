@@ -47,10 +47,7 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
     paddr_t pde_base_addr = cpu.CR3;
     paddr_t pde_item_addr = pde_base_addr+((addr>>22)<<2);
     paddr_t pde_item = paddr_read(pde_item_addr,4);
-    //Log("pde_iem:%d",pde_item);
     if(pde_item & PRESENT){
-      //    Log("pde_iem:%d",pde_item);
-
 	    //find page frame entry
 	    paddr_t pte_base_addr = pde_item & 0xFFFFF000;//take 20bit
 	    paddr_t pte_item_addr = pte_base_addr + (((addr>>12)<<2) & 0x0FFF);
@@ -92,14 +89,11 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
- //   Log("out,%d;len:%d",addr,len);
-
   if((addr&0x0FFF)+len>PG_SIZE){
     //data cross the page boundary
-  //      Log("out,%d;len:",addr,len);
-
-
+    
     int res=PG_SIZE-(addr&0x0FFF);
+
     paddr_t paddr=page_translate(addr,true);
     uint32_t low_data=paddr_read(paddr,res);
 
@@ -109,11 +103,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
     uint32_t data=low_data + (high_data<<(res<<3));
     return data;
   }else{
-     //   Log("else,%d;len:%d",addr,len);
-
     paddr_t paddr=page_translate(addr,true);
-            //  Log("paddr,%d",paddr);
-
     return paddr_read(paddr, len);
   }
 }

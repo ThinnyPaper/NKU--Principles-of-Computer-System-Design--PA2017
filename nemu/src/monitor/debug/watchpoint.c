@@ -87,9 +87,3 @@ bool check_wp(){
   }
   return ret;
 }
-WP* get_head(){
-  return head;
-}
-WP* get_free(){
-  return free_;
-}

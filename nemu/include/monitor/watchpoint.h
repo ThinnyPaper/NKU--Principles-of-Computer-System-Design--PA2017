@@ -10,7 +10,7 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
-  char* expr;
+  char expr[MAX_LEN];
   uint32_t value;
 
 } WP;
@@ -19,6 +19,5 @@ WP* new_wp();
 void free_wp(int no);
 bool check_wp();
 void show_wp();
-WP* get_head();
-WP* get_free();
+
 #endif
