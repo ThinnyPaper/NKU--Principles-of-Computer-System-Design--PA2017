@@ -12,6 +12,9 @@ make_EHelper(pop);
 make_EHelper(leave);
 make_EHelper(cltd);
 make_EHelper(cwtl);
+make_EHelper(pusha);
+make_EHelper(popa);
+
 //Binary
 make_EHelper(add);
 make_EHelper(sub);
@@ -51,19 +54,13 @@ make_EHelper(lea);
 make_EHelper(nop);
 
 make_EHelper(operand_size);
-
+//system
 make_EHelper(inv);
 make_EHelper(nemu_trap);
 make_EHelper(in);
 make_EHelper(out);
-
-//PA3
-make_EHelper(lidt);
 make_EHelper(int);
-make_EHelper(pusha);
-make_EHelper(popa);
+make_EHelper(lidt);
 make_EHelper(iret);
-
-//PA4
 make_EHelper(mov_cr2r);
 make_EHelper(mov_r2cr);

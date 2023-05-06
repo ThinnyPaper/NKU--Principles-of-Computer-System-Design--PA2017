@@ -21,6 +21,8 @@ _(UP) _(DOWN) _(LEFT) _(RIGHT) _(INSERT) _(DELETE) _(HOME) _(END) _(PAGEUP) _(PA
 
 #define _KEY_NAME(k) _KEY_##k,
 
+
+// _KEYS(_KEY_NAME): _KEY_ESCAPE,_KEY_F1,...,
 enum {
   _KEY_NONE = 0,
   _KEYS(_KEY_NAME)
@@ -30,7 +32,7 @@ enum {
 static uint32_t keymap[256] = {
   _KEYS(XX)
 };
-
+//[SDL_SCANCODE_ESCAPE]=_KEY_ESCAPE,...
 #define KEY_QUEUE_LEN 1024
 static int key_queue[KEY_QUEUE_LEN];
 static int key_f = 0, key_r = 0;
