@@ -4,16 +4,13 @@
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
-static WP *head, *free_;//head=>using wp,free=>free wp
+static WP *head, *free_;
 
 void init_wp_pool() {
   int i;
-  //arrange number for each wp in acsent.
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = &wp_pool[i + 1];
-    wp_pool[i].value = 0;
-    wp_pool[i].isfree=true;
   }
   wp_pool[NR_WP - 1].next = NULL;
 
@@ -23,72 +20,70 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
-WP* newwp(char* args,uint32_t value){
-  printf("222:%s\n",args);
-  if(free_==NULL){
-	Assert(0,"No space to allocate watchpoint.\n");
-	return NULL;
+WP* new_wp(){
+  // first check if there is still some available watchpoint
+  if(free_ == NULL){
+    printf("No available watchpoint!\n");
+    assert(0);
   }
-  WP* new=free_;
-  new->expr=(char*)malloc(strlen(args));
-  strcpy(new->expr,args);
-  new->value=value;new->isfree=false;
-  free_=free_->next;
-  new->next=head;
-  head=new;
-  return new;
-}
-
-bool free_wp(int n){
-	if(n>=NR_WP){
-		printf("N is out of range.\n");
-		return false;
-	}
-	WP* wp=&wp_pool[n];
-	wp->expr="";
-	wp->value=0;
-	wp->isfree=true;
-	if(!head){
-		printf("No watchpoint Occupied.\n");
-		return false;
-	}
-	WP* temp=head,*nxt=head->next;
-	if(temp->NO==wp->NO){
-		head=head->next;
-		temp->next=free_;
-		free_=temp;
-		return true;
-	}
-	while(nxt){
-		if(nxt->NO==wp->NO){
-			temp->next=nxt->next;
-			nxt->next=free_;
-			free_=nxt;
-			return false;
-		}
-		temp=nxt;
-		nxt=nxt->next;
-	}
-	printf("wachpoint No.%d is not occupied.\n",wp->NO);
-	return false;
-}
-
-void print_wp(){
-	if(!head){
-		printf("All Watchpoint Available\n.");
-		return;
-	}
-	for(int i=0;i<NR_WP;i++){
-		if(!wp_pool[i].isfree)
-			printf("watchpoint %d: %s = %u\n",wp_pool[i].NO,wp_pool[i].expr,wp_pool[i].value);
-	}
-	return;
-}
-WP* get_head(){
+  WP* newWP = free_;
+  free_ = free_->next;
+  newWP->next = head;
+  head = newWP;
   return head;
 }
-WP* get_free(){
-  return free_;
+
+void free_wp(int no){
+  WP* wp = NULL;
+  for(WP* i = head; i != NULL; i = i->next) {
+    if(i->NO == no) {
+      wp = &wp_pool[no];
+    }
+  }
+  if(wp == NULL) {
+    return ;
+  }
+  memset(wp->expr, 0, MAX_LEN);
+  if(head == wp){
+    head = wp->next;
+  }
+  
+  else{
+    for(WP* i = head;i!=NULL;i = i->next){
+      if(i->next == wp){
+        i->next = wp->next;
+      }
+    }
+  }
+
+  wp->next = free_;
+  free_ = wp;
 }
 
 
+
+
+void show_wp(){
+  for(WP* i = head;i != NULL; i = i->next) {
+    printf("Watchpoint %d : %s\n", i->NO, i->expr);
+  }
+}
+
+bool check_wp(){
+  bool ret = false;
+  for(WP* i = head; i != NULL; i = i->next){
+    bool success = true;
+    uint32_t ans = expr(i->expr, &success);
+    if(success){
+      if(ans != i->value){
+        printf("Watchpoint NO: %d\texpr: %s\t0x%08d->0x%08d\n", i->NO, i->expr, i->value, ans);
+        i->value = ans;
+        ret = true;
+      }
+    }
+    else{
+      assert(0);  //should not reach here
+    }
+  }
+  return ret;
+}
