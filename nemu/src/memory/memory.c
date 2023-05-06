@@ -89,9 +89,10 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-Log("%d",addr);
-assert(0);
+
   if((addr&0x0FFF)+len>PG_SIZE){
+    Log("%d",addr);
+assert(0);
       //data cross the page boundary
       
       int res=PG_SIZE-(addr&0x0FFF);
@@ -105,6 +106,7 @@ assert(0);
       uint32_t data=low_data + (high_data<<(res<<3));
       return data;
   }else{
+
       paddr_t paddr=page_translate(addr,true);
       return paddr_read(paddr, len);
   }
