@@ -107,7 +107,7 @@ assert(0);
       return data;
   }else{
    Log("else,%d;len:%d",addr,len);
-assert(0);
+//assert(0);
       paddr_t paddr=page_translate(addr,true);
       return paddr_read(paddr, len);
   }
