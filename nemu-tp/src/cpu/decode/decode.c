@@ -38,11 +38,11 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-
   //remember signal extension
   if(op->width==4)op->simm=instr_fetch(eip,op->width);
   if(op->width==1)op->simm=(int32_t)(int8_t)instr_fetch(eip,op->width);
   //printf("op->simm: 0x%08X\n",op->simm);
+
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -114,9 +114,6 @@ make_DHelper(A){
     decode_op_a(eip,id_dest,true);
     decoding.jmp_eip=id_dest->simm;
 }
-
-
-
 
 /* Eb <- Gb
  * Ev <- Gv
@@ -226,7 +223,7 @@ make_DHelper(SI_E2G) {
   if (id_dest->width == 2) {
     id_src->val &= 0xffff;
   }
-}
+} 
 
 make_DHelper(gp2_1_E) {
   decode_op_rm(eip, id_dest, true, NULL, false);

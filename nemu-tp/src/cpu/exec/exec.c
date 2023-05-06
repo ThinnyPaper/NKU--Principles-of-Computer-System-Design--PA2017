@@ -13,6 +13,7 @@ typedef struct {
 #define EX(ex)             EXW(ex, 0)
 #define EMPTY              EX(inv)
 #define TIMER_IRQ 32
+
 static inline void set_width(int width) {
   if (width == 0) {
     width = decoding.is_operand_size_16 ? 2 : 4;
@@ -234,7 +235,6 @@ void exec_wrapper(bool print_flag) {
   //give the instruction and execute
   decoding.seq_eip = cpu.eip;
   exec_real(&decoding.seq_eip);//make_EHelper(real)
-
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - cpu.eip;
   sprintf(decoding.p, "%*.s", 50 - (12 + 3 * instr_len), "");
@@ -248,7 +248,6 @@ void exec_wrapper(bool print_flag) {
 #ifdef DIFF_TEST
   uint32_t eip = cpu.eip;
 #endif
-
   //update eip for next.
   update_eip();
 
@@ -257,13 +256,10 @@ void exec_wrapper(bool print_flag) {
   difftest_step(eip);
 #endif
 
-  //query INTR
-
   if(cpu.INTR & cpu.EFLAGS.IF){
-     // printf("query: INTR- %d, IF- %d",cpu.INTR,cpu.EFLAGS.IF);
-      cpu.INTR = false;
-      raise_intr(TIMER_IRQ, cpu.eip);
-      update_eip();
+    // printf("query: INTR- %d, IF- %d",cpu.INTR,cpu.EFLAGS.IF);
+    cpu.INTR = false;
+    raise_intr(TIMER_IRQ, cpu.eip);
+    update_eip();
   }
-
 }

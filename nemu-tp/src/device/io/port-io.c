@@ -7,7 +7,6 @@
 /* "+ 3" is for hacking, see pio_read() below */
 static uint8_t pio_space[PORT_IO_SPACE_MAX + 3];
 
-//map of port-io
 typedef struct {
   ioaddr_t low;
   ioaddr_t high;

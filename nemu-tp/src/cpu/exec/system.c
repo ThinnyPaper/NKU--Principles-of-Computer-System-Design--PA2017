@@ -3,6 +3,7 @@
 void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 extern void raise_intr(uint8_t NO, vaddr_t ret_addr) ;
+
 make_EHelper(lidt) {
   //use vaddr_read
   if (decoding.is_operand_size_16) {
@@ -13,19 +14,19 @@ make_EHelper(lidt) {
 	cpu.IDTR.limit=vaddr_read(id_dest->addr,2);
 	cpu.IDTR.base=vaddr_read(id_dest->addr+2,4);
   }
- //printf("here 0x%08X 0x%08X\n",cpu.IDTR.limit,cpu.IDTR.base);
+
   print_asm_template1(lidt);
 }
 
 make_EHelper(mov_r2cr) {
   //set cr
   switch(id_dest->reg){
-      case 0:
-	  cpu.cr0=id_src->val;
-	  break;
-      case 3:
-	  cpu.cr3=id_src->val;
-	  break;
+  case 0:
+    cpu.CR0=id_src->val;
+    break;
+  case 3:
+    cpu.CR3=id_src->val;
+    break;
   }
   print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
 }
@@ -33,11 +34,11 @@ make_EHelper(mov_r2cr) {
 make_EHelper(mov_cr2r) {
   //get cr
   switch(id_dest->reg){
-      case 0:
-	  id_dest->val=cpu.cr0;
+  case 0:
+	  id_dest->val=cpu.CR0;
 	  break;
-      case 3:
-	  id_dest->val=cpu.cr3;
+  case 3:
+	  id_dest->val=cpu.CR3;
 	  break;
   }
   print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));

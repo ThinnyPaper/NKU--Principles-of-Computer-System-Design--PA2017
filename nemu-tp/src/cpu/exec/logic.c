@@ -1,7 +1,7 @@
 #include "cpu/exec.h"
 
 make_EHelper(test) {
-  //the same as add  but no write-back.
+  //the same as and  but no write-back.
   rtl_and(&t2,&id_dest->val,&id_src->val);
   //update ZF,SF,(and PF,but PA2 seems to ignore this flag.
   rtl_update_ZFSF(&t2,id_dest->width);
