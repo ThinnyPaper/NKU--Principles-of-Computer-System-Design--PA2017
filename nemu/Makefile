@@ -52,3 +52,5 @@ gdb: $(BINARY)
 
 clean: 
 	rm -rf $(BUILD_DIR)
+count:
+	find . -iregex ".*\.\(h\|c\)$$"|xargs cat|grep -v ^$$|wc -l

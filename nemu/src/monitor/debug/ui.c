@@ -38,143 +38,103 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
-// PA1 function-----------------------------------------------------
-// section2
-static int cmd_si(char *args){
-  if(args == NULL) {
-		cpu_exec(1);
-		return 0;
-	}
-	char * steps = strtok(NULL, " ");
-	if(steps == NULL) {
-		cpu_exec(1);
-	} 
-  else {
-		int n = 1;
-		if(sscanf(steps, "%d", &n) == 1 && n > 0) { 
-      cpu_exec(n); 
-    }
-    else { 
-      printf("Bad Argument: \e[31m%s\e[0m\n", steps); 
-    }
-	}
-	return 0;
-}
-
-static int cmd_info(char *args){
-	char *arg = strtok(NULL, " ");
-	if(arg==NULL){
-		printf("undefined info args\n");
-		return 0;
-	}
-	if(strcmp(arg, "r") == 0) {
-		//print reg info 
-    printf("eax: 0x%08x\n", cpu.eax);
-    printf("ecx: 0x%08x\n", cpu.ecx);
-    printf("edx: 0x%08x\n", cpu.edx);
-    printf("ebx: 0x%08x\n", cpu.ebx);
-    printf("esp: 0x%08x\n", cpu.esp);
-    printf("ebp: 0x%08x\n", cpu.ebp);
-    printf("esi: 0x%08x\n", cpu.esi);
-    printf("edi: 0x%08x\n", cpu.edi);
-    printf("eip: 0x%08x\n", cpu.eip);
-
-	} 
-  else if (strcmp(arg, "w") == 0) {
-		// TODO: Print Breakpoint
-    show_wp();
-	} 
-  else {
-		printf("Bad Argument: \e[31m%s\e[0m\n",arg);
-	}
-	return 0;
-}
-
-static int cmd_x(char *args) {
-	int n;
-	char *expr;
-	vaddr_t addr;
-	if(args == NULL) { 
-		printf("Command format: x N EXPR\n");
-		return 0;
-	}
-	if(sscanf(args, "%d", &n) == 1) {
-		expr = strtok(NULL, " ");
-		expr = strtok(NULL, " ");
-		printf("n = %d, expr = %s\n", n, expr);
-		if(expr == NULL) {
-			printf("Command format: x N EXPR\n");
-			return 0;
-		}
-    // TODO: Calculate expr
-
-		if(sscanf(expr, "0x%08x", &addr) == 1) {
-			while(n > 0) {
-				printf("0x%08x:\t", addr);
-        printf("0x%08x ", vaddr_read(addr, 4));
-				n --;
-				addr += 4;
-				printf("\n");
-			}
-		}
-    else {
-      printf("Bad EXPR\n");
-      return 0;
-    }
-	} 
-  else {
-		printf("Command format: x N EXPR\n");
-		return 0;
-	}
-	return 0;
-}
-
-// section2
-static int cmd_p(char *args) {
-  char *expr_str = strtok(NULL, "\n");
-  printf("expr = %s\n", expr_str);
-		if(expr_str == NULL) {
-			printf("NULL EXPR\n");
-			return 0;
-		}
-  uint32_t res = 0;
-  bool success = true;
-  res=expr(expr_str, &success);
-  if(success){
-    printf("result=%d\n", res);
+static int cmd_si(char *args) {
+  if(args==NULL){ 
+    printf("Si [NUM] must has a number\n");
+    return 0;
   }
-  else{
-    printf("Evaluate falled\n");
-  }
-
+  int n=0;
+  sscanf(args,"%d\n",&n);
+  cpu_exec(n);
   return 0;
 }
-
-// section3
-static int cmd_w(char* args) {
-  WP* wp = new_wp();
-  char* arg = strtok(NULL, "\n");
-  strcpy(wp->expr, arg);
-  bool success = true;
-  wp->value = expr(arg, &success);
-  if(success){
-    printf("watchpoint %d : %s\n", wp->NO, wp->expr);
+static int cmd_info(char *args) {
+  if(args==NULL){
+    printf("Use info r OR info w\n");
+    return 0;
   }
-  else{
-    printf("Illegal Expression!\n");
-    free_wp(wp->NO);
+  char ch;
+  sscanf(args,"%c\n",&ch);
+  switch(ch){
+    case 'r':{
+	for(int i=0;i<8;i++){
+	    printf("%s: 0x%08X\n",regsl[i],cpu.gpr[i]._32);
+	}
+	printf("eip: 0x%08X\n",cpu.eip);
+	printf("CF: %d\n",cpu.EFLAGS.CF);
+	printf("ZF: %d\n",cpu.EFLAGS.ZF);
+	printf("OF: %d\n",cpu.EFLAGS.OF);
+	printf("SF: %d\n",cpu.EFLAGS.SF);
+	printf("IF: %d\n",cpu.EFLAGS.IF);
+
+	break;
+    }
+    case 'w':{
+	print_wp();
+	break;
+    }
+    default:{
+	printf("Please Use info r OR info w\n");
+	break;
+    }
   }
   return 0;
 }
 
-static int cmd_d(char* args) {
-  char* arg = strtok(NULL, "\n");
-  int no = atoi(arg);
-  free_wp(no);
-  return 0;
-}
-//end of PA1 funcion------------------------------------------------
+static int cmd_x(char* args){
+    if(args==NULL){
+	printf("Please Use x N EXPR Format.\n");
+	return 0;
+    }
 
+    int n;//n*4byte to scan
+    vaddr_t start_addr;// start address of scanning.
+    sscanf(strtok(args," "),"%d",&n);
+    
+    //printf("%s",args);
+    printf("%d\n",n);
+    char * token=strtok(NULL," ");//the next token which contains start_addr
+    if(token==NULL){
+	printf("Please Use x N EXPR Format.\n");
+	return 0;
+    }
+    sscanf(token,"0x%X",&start_addr);
+    printf("0x%08X\n",start_addr);
+    for(int i=0;i<n;i++){
+	uint32_t data=vaddr_read(start_addr,4);
+	printf("0x%08X: 0x%08X\n",start_addr,data);
+	start_addr+=4;
+    }
+    return 0;
+}
+
+static int cmd_p(char* args){
+    bool success=true;
+    uint32_t ans=expr(args,&success);
+    if(!success){
+	printf("expr is wrong,please check\n");
+	return 0;
+    }
+    printf("%s = %d\n",args,ans);
+    return 0;
+}
+
+static int cmd_w(char* args){
+	bool success=true;
+	uint32_t ans=expr(args,&success);
+	if(!success){
+		printf("expr is wrong,please check\n");
+		return 0;
+	}
+	WP* wp=newwp(args,ans);
+	printf("Set watchpoint No.%d. %s:%u\n",wp->NO,wp->expr,wp->value);
+	return 0;
+}
+static int cmd_d(char* args){
+	uint32_t i=s2i(args);
+	if(free_wp(i))printf("watchpoint No.%d is free.\n",i);
+	return 0;
+}
 static struct {
   char *name;
   char *description;
@@ -183,15 +143,13 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-	
   /* TODO: Add more commands */
-  { "si", "Single setp execution", cmd_si},
-  { "info", "r: Print register info; w: Print watchpoint info", cmd_info},
-  { "x", "x N EXPR: Print memory from EXPR to EXPR+N.", cmd_x},
-  { "p", "Caculate a EXPR", cmd_p},
-  { "w", "Set watchpoint", cmd_w},
-  { "d", "Delete watchpoint", cmd_d}
-  //PA1 finished
+  { "si", "Exec by steps", cmd_si },
+  { "info", "Print register/watchPoint information", cmd_info},
+  { "x", "Scan Memory", cmd_x},
+  { "p", "Calculate Expression",cmd_p},
+  { "w", "Set Watchpoint",cmd_w},
+  { "d", "Delete Watchpoint",cmd_d},
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -232,7 +190,6 @@ void ui_mainloop(int is_batch_mode) {
     /* extract the first token as the command */
     char *cmd = strtok(str, " ");
     if (cmd == NULL) { continue; }
-
     /* treat the remaining string as the arguments,
      * which may need further parsing
      */

@@ -3,6 +3,7 @@
 
 #include "nemu.h"
 
+//make_EHelper(real) => void exec_real(eip);
 #define make_EHelper(name) void concat(exec_, name) (vaddr_t *eip)
 typedef void (*EHelper) (vaddr_t *);
 
