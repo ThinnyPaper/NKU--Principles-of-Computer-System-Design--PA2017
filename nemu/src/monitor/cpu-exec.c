@@ -31,9 +31,20 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
     // PA1
-    if(check_wp()){
-      nemu_state = NEMU_STOP;
-    }
+   // if(check_wp()){
+     // nemu_state = NEMU_STOP;
+  //  }
+  	WP* temp=get_head();
+	bool success=true;
+	while(temp){
+		printf("111: %s\n",temp->expr);
+		uint32_t v=expr(temp->expr,&success);	
+		if(v!=temp->value){
+			nemu_state=NEMU_STOP;
+			printf("watchpoint-%d: expr %s 's value %u changed to %u\n",temp->NO,temp->expr,temp->value,v);
+		}
+		temp=temp->next;
+	}
 #endif
 
 #ifdef HAS_IOE
