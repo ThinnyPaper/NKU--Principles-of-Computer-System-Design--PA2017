@@ -49,6 +49,8 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
     paddr_t pde_item = paddr_read(pde_item_addr,4);
     Log("pde_iem:%d",pde_item);
     if(pde_item & PRESENT){
+          Log("pde_iem:%d",pde_item);
+
 	    //find page frame entry
 	    paddr_t pte_base_addr = pde_item & 0xFFFFF000;//take 20bit
 	    paddr_t pte_item_addr = pte_base_addr + (((addr>>12)<<2) & 0x0FFF);
