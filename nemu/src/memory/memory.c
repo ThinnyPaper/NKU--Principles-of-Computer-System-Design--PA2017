@@ -45,6 +45,7 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 
     if(cpu.PG){//open the pte mode
 	//find page table entry.
+    Log("in vaddr");
 	paddr_t pde_base_addr = cpu.cr3;
 	paddr_t pde_item_addr = pde_base_addr+((addr>>22)<<2);
 	paddr_t pde_item = paddr_read(pde_item_addr,4);
