@@ -28,7 +28,6 @@ char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  Log("get here");
   cpu_exec(-1);
   return 0;
 }
