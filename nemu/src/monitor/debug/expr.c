@@ -260,6 +260,9 @@ int find_dominant(int p, int q){
 
 
 int eval(int p, int q, bool* success) {
+  Log("is1");
+  return 1;
+
   if( success == false){
     return 0;
   }

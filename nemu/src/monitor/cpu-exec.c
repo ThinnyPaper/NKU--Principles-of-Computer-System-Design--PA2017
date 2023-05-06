@@ -7,7 +7,7 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INSTR_TO_PRINT 100000
+#define MAX_INSTR_TO_PRINT 10
 
 int nemu_state = NEMU_STOP;
 
@@ -31,20 +31,9 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
     // PA1
-   // if(check_wp()){
-     // nemu_state = NEMU_STOP;
-  //  }
-  	WP* temp=get_head();
-	bool success=true;
-	while(temp){
-		printf("111: %s\n",temp->expr);
-		uint32_t v=expr(temp->expr,&success);	
-		if(v!=temp->value){
-			nemu_state=NEMU_STOP;
-			printf("watchpoint-%d: expr %s 's value %u changed to %u\n",temp->NO,temp->expr,temp->value,v);
-		}
-		temp=temp->next;
-	}
+    if(check_wp()){
+      nemu_state = NEMU_STOP;
+    }
 #endif
 
 #ifdef HAS_IOE
