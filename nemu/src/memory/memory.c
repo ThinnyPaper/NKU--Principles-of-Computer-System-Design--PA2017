@@ -41,7 +41,7 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
     dir: 31 bit - 22 bit
     table: 21 bit - 12 bit
     each table item occupies 4 byte 
-*/    Log("here:%d",cpu.cr0);
+*/   // Log("here:%d",cpu.cr0);
 
     if(cpu.PG){//open the pte mode
 	//find page table entry.
