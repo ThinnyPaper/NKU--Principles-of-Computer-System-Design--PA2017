@@ -89,6 +89,7 @@ paddr_t page_translate(vaddr_t addr, bool isRead){
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
+Log("here");
   if((addr&0x0FFF)+len>PG_SIZE){
       //data cross the page boundary
       
