@@ -106,7 +106,7 @@ assert(0);
       uint32_t data=low_data + (high_data<<(res<<3));
       return data;
   }else{
-   Log("else,%d;len:%d",addr,len);
+   //Log("else,%d;len:%d",addr,len);
 //assert(0);
       paddr_t paddr=page_translate(addr,true);
       return paddr_read(paddr, len);
