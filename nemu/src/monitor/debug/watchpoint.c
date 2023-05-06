@@ -82,7 +82,7 @@ bool check_wp(){
       }
     }
     else{
-      //assert(0);  //should not reach here
+      assert(0);  //should not reach here
     }
   }
   return ret;
