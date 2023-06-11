@@ -3,28 +3,14 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  unsigned long long mul = a * b;
-  return mul>>16;
+  assert(0);
+  return 0;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  assert(b!=0);
-  unsigned long long div = a<<16;
-  div = div/b;
-  return div;
+  assert(0);
+  return 0;
 }
-
-/*float occupies 32bit to store a number.
-  32th bit: sign
-  24-31th bits : exp
-  1:23 bits: tail-number 
-*/
-
-struct FloatBit{
-  uint32_t num :23;
-  uint32_t exp :8;
-  uint32_t sign:1;
-};
 
 FLOAT f2F(float a) {
   /* You should figure out how to convert `a' into FLOAT without
@@ -36,34 +22,14 @@ FLOAT f2F(float a) {
    * stack. How do you retrieve it to another variable without
    * performing arithmetic operations on it directly?
    */
-  struct FloatBit *float_bit = (struct FloatBit*)&a;
-  int exp = float_bit->exp - 127;
-  unsigned int num = float_bit->num & 0x7fffff;
 
-  if(float_bit->exp==0){
-  	exp++;
-  }else{
-	num |= (1<<23); //pre-bit
-  }
-
-  unsigned int result;
-  //now the point is between 23-24bit,but FLOAT's point is between 16-17 bit.
-  //So we need right shift 7bit from float to FLOAT.
-  //BUT it will lost some num.We should consider the exp to deside whether we need to right shift.
-  if(exp<7){
-  	result = num>>(7-exp);
-  }else if(exp>=7 && exp<22){
-	result = num<<(exp-7);
-  }else{
-     //overflow
-     assert(0);
-  }
-  
-  return result;
+  assert(0);
+  return 0;
 }
 
 FLOAT Fabs(FLOAT a) {
-  return (a>=0)?a:-a;
+  assert(0);
+  return 0;
 }
 
 /* Functions below are already implemented */
